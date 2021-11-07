@@ -1,0 +1,15 @@
+html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  width: calc(100% - calc(var(--body-padding) * 2));
+  height: calc(100% - calc(var(--body-padding) * 2));
+  margin: 0px;
+  padding: var(--body-padding);
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  background-color: var(--bg);
+  color: var(--fg);
+}
