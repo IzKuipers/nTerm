@@ -5,9 +5,9 @@ import { userInterface } from "../ui";
 export const intro: InternalCommand = {
   execute: () => {
     userInterface.output(
-      `Welcome to ${environment.productName}!\n` +
-        `You are running version ${environment.productVersion}.\n\n` +
-        `${environment.productName} was created by ${environment.vendorName}.`
+      `Welcome to ${environment.pName}!\n` +
+        `You are running version ${environment.pVer}.\n\n` +
+        `${environment.pName} was created by ${environment.vendor}.`
     );
   },
 };

@@ -3,7 +3,7 @@ import { environment } from "../env";
 
 export const clear: Command = {
   execute: () => {
-    environment.displayOutput.innerText = "";
+    environment.dispOut.innerText = "";
   },
 
   description: "Clear the screen",

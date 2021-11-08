@@ -10,15 +10,15 @@ class UserInterface {
     let span = document.createElement("span");
     span.innerText = `${str}${lineBreak ? "\n" : ""}`;
 
-    environment.displayOutput.append(span);
+    environment.dispOut.append(span);
   }
 
   prompt(prompt: string = environment.prompt) {
-    if (environment.inputId) {
-      kernel.log(`Unfocused input ${environment.inputId}`);
+    if (environment.iId) {
+      kernel.log(`Unfocused input ${environment.iId}`);
 
       document
-        .getElementById(environment.inputId)
+        .getElementById(environment.iId)
         ?.setAttribute("disabled", "true");
     }
 
@@ -32,20 +32,22 @@ class UserInterface {
     input.id = `#${Math.floor(Math.random() * 999999999)}`;
     input.style.width = `calc(100% - ${prompt.length}em)`;
 
-    environment.inputId = input.id;
-    environment.displayOutput.append(input);
+    environment.iId = input.id;
+    environment.dispOut.append(input);
     
     this.output("");
   }
 
   evaluateCommand() {
-    let input = document.getElementById(
-      environment.inputId
+    let input:HTMLInputElement = document.getElementById(
+      environment.iId
     ) as HTMLInputElement;
 
-    let command = input?.value;
+    let value:string[] = input?.value.split(" ");
+    let command:string = value[0].toLowerCase();
 
     if (commands.has(command)) {
+      environment.argv = value.splice(1,1);
       commands.get(command)?.execute();
     } else {
       internalCommands.get("default")?.execute();
@@ -54,10 +56,10 @@ class UserInterface {
 
   inputFocusLoop() {
     let ival = setInterval(() => {
-      let input = document.getElementById(environment.inputId);
+      let input = document.getElementById(environment.iId);
 
       if (input) input.focus();
-      if (environment.kernelHalt) clearInterval(ival);
+      if (environment.kHalt) clearInterval(ival);
     }, 50);
   }
 }

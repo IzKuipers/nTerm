@@ -1,14 +1,24 @@
 class Environment {
-  displayOutput: HTMLElement = document.body;
-  vendorName: string = "TechWorldInc";
-  productName: string = "NetCMD";
-  productVersion: string = "2.0-alpha";
+  // HTML Elements
+  dispOut: HTMLElement = document.body;
+
+  // Strings
+  vendor: string = "TechWorldInc";
+  pName: string = "NetCMD";
+  pVer: string = "2.0-alpha";
   prompt: string = "$ ";
-  inputId: string = "";
-  history: string[] = [];
-  kernelLog: string[] = [];
-  kernelStartTime: number = 0;
-  kernelHalt: boolean = false;
+  iId: string = "";
+
+  // String Arrays
+  hist: string[] = [];
+  kLog: string[] = [];
+  argv: string[] = [];
+
+  // Integers
+  kStartTime: number = 0;
+
+  // Bools
+  kHalt: boolean = false;
 }
 
 export const environment = new Environment();

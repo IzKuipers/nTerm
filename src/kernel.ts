@@ -6,14 +6,14 @@ import { internalCommands } from "./sys/icmd";
 class Kernel {
   init(target: HTMLElement) {
     if (target) {
-      environment.kernelStartTime = new Date().getTime();
+      environment.kStartTime = new Date().getTime();
 
       userInterface.inputFocusLoop();
 
       keyboard.register();
 
       this.log(`Setting environment.displayOutput to ${target}...`);
-      environment.displayOutput = target;
+      environment.dispOut = target;
 
       this.log("Started commands.intro");
       internalCommands.get("intro")?.execute();
@@ -24,19 +24,19 @@ class Kernel {
   }
 
   panic() {
-    environment.kernelHalt = true;
+    environment.kHalt = true;
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
-    environment.displayOutput.innerText = "";
+    environment.dispOut.innerText = "";
 
-    for (let i = 0; i < environment.kernelLog.length; i++) {
-      environment.displayOutput.innerText += environment.kernelLog[i];
+    for (let i = 0; i < environment.kLog.length; i++) {
+      environment.dispOut.innerText += environment.kLog[i];
     }
   }
 
   log(message: string = "") {
-    let time = new Date().getTime() - environment.kernelStartTime;
+    let time = new Date().getTime() - environment.kStartTime;
 
-    environment.kernelLog.push(`[${time}] ${message}\n`);
+    environment.kLog.push(`[${time}] ${message}\n`);
   }
 }
 
