@@ -14,8 +14,7 @@ export const help: Command = {
 
       if (commands.has(requestedCommand)) {
         userInterface.output(
-          `${requestedCommand.toUpperCase().padEnd(10, " ")}${
-            commands.get(requestedCommand)?.description
+          `${requestedCommand.toUpperCase().padEnd(10, " ")}${commands.get(requestedCommand)?.description
           }`
         );
       } else {

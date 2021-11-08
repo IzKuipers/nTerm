@@ -1,7 +1,10 @@
+import { kernel } from "../kernel";
 import { userInterface } from "./ui";
 
 class Keyboard {
   register() {
+    kernel.log("Started Keyboard.register");
+    
     document.addEventListener("keydown", (e) => {
       this.processEvent(e);
     });

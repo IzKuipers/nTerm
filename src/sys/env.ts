@@ -2,14 +2,17 @@ class Environment {
   // HTML Elements
   dispOut: HTMLElement = document.body;
 
-  // Strings
+  // Readonly Strings
   readonly vendor: string = "TechWorldInc"; // Author
   readonly pName: string = "NetCMD"; // Product Name
   readonly pVer: string = "2.0-alpha"; // Product Version
-  prompt: string = "$ "; // Prompt String
+
+  // Writable strings
   iId: string = ""; // Input ID
   cmd: string = ""; // Command
   val: string = ""; // Input value
+  path: string = "/" // Current Path
+  prompt: string = `${this.path}\n$`; // Prompt String
 
   // String Arrays
   hist: string[] = []; // History List

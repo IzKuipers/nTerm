@@ -6,7 +6,7 @@ import { variables } from "./vars";
 
 class UserInterface {
 	output(str: string, lineBreak: boolean = true) {
-		kernel.log(`Started userInterface.output`);
+		//kernel.log(`Started userInterface.output`);
 
 		let span = document.createElement("span");
 		span.innerText = `${str}${lineBreak ? "\n" : ""}`;
@@ -14,33 +14,40 @@ class UserInterface {
 		environment.dispOut.append(span);
 	}
 
-	prompt(prompt: string = variables.get("prompt")?.value || environment.prompt) {
-		if (environment.iId) {
-			kernel.log(`Unfocused input ${environment.iId}`);
-
-			document
-				.getElementById(environment.iId)
-				?.setAttribute("disabled", "true");
+	prompt() {
+		if (!environment.kHalt) {
+			kernel.log(`Started userInterface.prompt`);
+			let prompt = this.getPrompt();
+	
+			if (environment.iId) {
+				kernel.log(`Unfocused input ${environment.iId}`);
+	
+				document
+					.getElementById(environment.iId)
+					?.setAttribute("disabled", "true");
+			}
+	
+			kernel.log(`Started userInterface.prompt`);
+	
+			this.output(`\n${prompt}`, false);
+	
+			let input = document.createElement("input");
+	
+			input.className = "input";
+			input.id = `#${Math.floor(Math.random() * 999999999)}`;
+			input.style.width = `calc(100% - ${prompt.length}em)`;
+			input.spellcheck = false;
+	
+			environment.iId = input.id;
+			environment.dispOut.append(input);
+	
+			this.output("");
 		}
-
-		kernel.log(`Started userInterface.prompt: ${prompt}`);
-
-		this.output(`\n${prompt}`, false);
-
-		let input = document.createElement("input");
-
-		input.className = "input";
-		input.id = `#${Math.floor(Math.random() * 999999999)}`;
-		input.style.width = `calc(100% - ${prompt.length}em)`;
-		input.spellcheck = false;
-
-		environment.iId = input.id;
-		environment.dispOut.append(input);
-
-		this.output("");
 	}
 
 	evaluateCommand() {
+		kernel.log(`Started userInterface.evaluateCommand`);
+
 		let input: HTMLInputElement = document.getElementById(
 			environment.iId
 		) as HTMLInputElement;
@@ -53,10 +60,14 @@ class UserInterface {
 		if (commands.has(command)) {
 			environment.argv = value.splice(1, 1);
 			environment.cmd = command;
+			
+			kernel.log(`Executing command "${command}" (${commands.get(command)?.description})`)
 
 			commands.get(command)?.execute();
+			
 		} else {
-			console.log(`"${command}"`);
+			kernel.log(`Execution of command "${command}" failed: no such definition`);
+			
 			if (command) kernelFunctions.get("default")?.execute();
 		}
 	}
@@ -68,6 +79,30 @@ class UserInterface {
 			if (input) input.focus();
 			if (environment.kHalt) clearInterval(ival);
 		}, 50);
+	}
+
+	getPrompt() {
+		let text = "";
+		let list = (variables.get("prompt")?.value || environment.prompt).split(" ");
+
+		for (let i = 0; i < list.length; i++) {
+			if (list[i].startsWith("$")) {
+				let keyName = list[i].replace("$", "");
+
+				console.log(keyName, variables.get(keyName)?.value);
+
+				if (variables.has(keyName)) {
+					let value = variables.get(keyName)?.value;
+					list[i] = value ?? list[i];
+				}
+			}
+
+			text += `${list[i]} `;
+		}
+
+		text.trimEnd();
+
+		return text;
 	}
 }
 

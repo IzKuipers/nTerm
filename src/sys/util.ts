@@ -1,6 +1,9 @@
+import { kernel } from "../kernel";
+
 class Utilities {
-  getTime() {
-    let today = new Date();
+  getTime(code:Date = new Date()) {
+    kernel.log(`Started Utilities.getTime`);
+    let today = code;
 
     return {
       h: today.getHours().toString().padStart(2, "0"),
@@ -11,6 +14,7 @@ class Utilities {
   }
 
   replaceAllCharsInStr(input: string, from: string, to: string) {
+    kernel.log(`Started Utilities.replaceAllCharsInStr`);
     let output = "";
 
     for (let i = 0; i < input.length; i++) {

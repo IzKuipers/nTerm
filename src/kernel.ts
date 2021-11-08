@@ -6,6 +6,8 @@ import { kernelFunctions } from "./sys/kf";
 class Kernel {
   init(target: HTMLElement) {
     if (target) {
+      this.setIntervals();
+
       environment.kStartTime = new Date().getTime();
 
       userInterface.inputFocusLoop();
@@ -23,14 +25,26 @@ class Kernel {
     }
   }
 
+  setIntervals() {
+    setInterval(() => {
+      if (environment.kHalt) {
+        document.getElementById(environment.iId)?.setAttribute("disabled","true");
+      }
+    },50)
+  }
+
   panic() {
     environment.kHalt = true;
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
     environment.dispOut.innerText = "";
 
+    userInterface.output(`! [ KERNEL PANIC ] !\n\nKernel Log (environment.kLog):\n`)
+
     for (let i = 0; i < environment.kLog.length; i++) {
       environment.dispOut.innerText += environment.kLog[i];
     }
+
+    userInterface.output(`\nOH NO! It appears that ${environment.pName} has crashed!\n\nIf this happens more often, please submit an issue at:\nhttps://www.github.com/${environment.vendor}/${environment.pName}/issues/\n\nHit Ctrl+R to reload`);
   }
 
   log(message: string = "") {
