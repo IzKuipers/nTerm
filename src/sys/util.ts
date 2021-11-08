@@ -9,6 +9,20 @@ class Utilities {
       ms: today.getMilliseconds().toString().padStart(3, "0"),
     };
   }
+
+  replaceAllCharsInStr(input: string, from: string, to: string) {
+    let output = "";
+
+    for (let i = 0; i < input.length; i++) {
+      if (input.charAt(i) === from) {
+        output += to;
+      } else {
+        output += input.charAt(i);
+      }
+    }
+
+    return output;
+  }
 }
 
 export const utilities = new Utilities();

@@ -1,7 +1,7 @@
 import { environment } from "./sys/env";
 import { userInterface } from "./sys/ui";
 import { keyboard } from "./sys/kb";
-import { internalCommands } from "./sys/icmd";
+import { kernelFunctions } from "./sys/kf";
 
 class Kernel {
   init(target: HTMLElement) {
@@ -16,7 +16,7 @@ class Kernel {
       environment.dispOut = target;
 
       this.log("Started commands.intro");
-      internalCommands.get("intro")?.execute();
+      kernelFunctions.get("intro")?.execute();
 
       this.log("Starting prompt loop...");
       userInterface.prompt();

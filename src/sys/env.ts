@@ -8,6 +8,8 @@ class Environment {
   readonly pVer: string = "2.0-alpha"; // Product Version
   prompt: string = "$ "; // Prompt String
   iId: string = ""; // Input ID
+  cmd: string = ""; // Command
+  val: string = ""; // Input value
 
   // String Arrays
   hist: string[] = []; // History List

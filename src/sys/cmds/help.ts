@@ -13,7 +13,6 @@ export const help: Command = {
       }
 
       if (commands.has(requestedCommand)) {
-        userInterface.output(`Description for "${requestedCommand.toUpperCase()}":\n`);
         userInterface.output(
           `${requestedCommand.toUpperCase().padEnd(10, " ")}${
             commands.get(requestedCommand)?.description

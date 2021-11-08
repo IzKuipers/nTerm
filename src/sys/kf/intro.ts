@@ -1,8 +1,8 @@
 import { environment } from "../env";
-import { InternalCommand } from "../icmd";
+import { CoreFunction } from "../kf";
 import { userInterface } from "../ui";
 
-export const intro: InternalCommand = {
+export const intro: CoreFunction = {
   execute: () => {
     userInterface.output(
       `Welcome to ${environment.pName}!\n` +
