@@ -3,22 +3,22 @@ class Environment {
   dispOut: HTMLElement = document.body;
 
   // Strings
-  vendor: string = "TechWorldInc";
-  pName: string = "NetCMD";
-  pVer: string = "2.0-alpha";
-  prompt: string = "$ ";
-  iId: string = "";
+  readonly vendor: string = "TechWorldInc"; // Author
+  readonly pName: string = "NetCMD"; // Product Name
+  readonly pVer: string = "2.0-alpha"; // Product Version
+  prompt: string = "$ "; // Prompt String
+  iId: string = ""; // Input ID
 
   // String Arrays
-  hist: string[] = [];
-  kLog: string[] = [];
-  argv: string[] = [];
+  hist: string[] = []; // History List
+  kLog: string[] = []; // Kernel Log
+  argv: string[] = []; // Argv list
 
   // Integers
-  kStartTime: number = 0;
+  kStartTime: number = 0; // Kernel Start Time
 
   // Bools
-  kHalt: boolean = false;
+  kHalt: boolean = false; // Kernel Halt
 }
 
 export const environment = new Environment();
