@@ -102,7 +102,7 @@ class UserInterface {
 
 	getPrompt() {
 		let text = "";
-		let list = (variables.get("prompt")?.value || environment.prompt).split(" ");
+		let list = (variables.get(environment.promptVarName)?.value || environment.prompt).split(" ");
 
 		for (let i = 0; i < list.length; i++) {
 			if (list[i].startsWith("$")) {

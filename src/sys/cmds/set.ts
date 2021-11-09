@@ -5,22 +5,27 @@ import { Variable, variables } from "../vars";
 
 export const set: Command = {
   execute: () => {
-    let name: string = environment.argv[0]!;
-    let value: string = environment.val.match(/"(.*?)"/)![1];
-
-    if (variables.has(name) && variables.get(name)?.readonly) {
-      userInterface.outputColor(`[Error]: `,`var(--red)`,false);
-      userInterface.output(`Cannot set readonly variable "${name}".`);
-    } else {
-      const variable: Variable = {
-        value,
-        readonly: false
+    if (environment.argv.length > 1) {
+      let name: string = environment.argv[0]!;
+      let value: string = environment.val.match(/"(.*?)"/)![1];
+  
+      if (variables.has(name) && variables.get(name)?.readonly) {
+        userInterface.outputColor(`[Error]: `,`var(--red)`,false);
+        userInterface.output(`Cannot set readonly variable "${name}".`);
+      } else {
+        const variable: Variable = {
+          value,
+          readonly: false
+        }
+  
+        variables.set(name, variable);
+  
+        userInterface.outputColor(`Variable [${name}] set to [${value}].`,`var(--blue)`);
       }
-
-      variables.set(name, variable);
-
-      userInterface.outputColor(`Variable [${name}] set to [${value}].`,`var(--blue)`);
+    } else {
+      userInterface.outputColor(`[Error]: missing arguments: type "HELP SET" for usage`,`var(--red)`,false);
     }
+    
 
   },
 

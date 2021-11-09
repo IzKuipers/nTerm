@@ -14,7 +14,8 @@ export const commands = new Map<string, Command>([
   ["dir", dir],
   ["gh", gh],
   ["hist", hist],
-  ["repeat", repeat]
+  ["repeat", repeat],
+  ["env",env],
 ]);
 
 import { help } from "./cmds/help";
@@ -27,3 +28,4 @@ import { dir } from "./cmds/dir";
 import { gh } from "./cmds/gh";
 import { hist } from "./cmds/hist";
 import { repeat } from "./cmds/repeat";
+import { env } from "./cmds/env";

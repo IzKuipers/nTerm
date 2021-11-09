@@ -28,7 +28,7 @@ export const varUtils = new VarUtils();
 
 const vars = new Map<string, Variable>(
     [
-        ["PS", {
+        [environment.promptVarName, {
             value: environment.prompt,
             readonly: false
         }],

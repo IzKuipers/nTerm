@@ -13,6 +13,7 @@ class Environment {
   val: string = ""; // Input value
   path: string = "/" // Current Path
   prompt: string = `[${this.path}]\n$`; // Prompt String
+  promptVarName: string = "PS"
 
   // String Arrays
   hist: string[] = []; // History List

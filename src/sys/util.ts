@@ -49,6 +49,19 @@ class Utilities {
 
     return list.join("");
   }
+
+  unescapeSlashes(str:string) {
+    let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
+
+    parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");
+  
+    try {
+      parsedStr = JSON.parse(`"${parsedStr}"`);
+    } catch(e) {
+      return str;
+    }
+    return parsedStr;
+  }
 }
 
 export const utilities = new Utilities();
