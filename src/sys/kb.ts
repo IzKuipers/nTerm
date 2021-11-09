@@ -14,7 +14,6 @@ class Keyboard {
     switch (e.key.toLowerCase()) {
       case "enter":
         userInterface.evaluateCommand();
-        userInterface.prompt();
         break;
       case "arrowup":
         console.log("arrowup");

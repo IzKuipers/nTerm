@@ -45,7 +45,7 @@ class UserInterface {
 		}
 	}
 
-	evaluateCommand() {
+	async evaluateCommand() {
 		kernel.log(`Started userInterface.evaluateCommand`);
 
 		let input: HTMLInputElement = document.getElementById(
@@ -58,18 +58,20 @@ class UserInterface {
 		let command: string = value[0].toLowerCase();
 
 		if (commands.has(command)) {
-			environment.argv = value.splice(1, 1);
+			environment.argv = value.slice(1);
 			environment.cmd = command;
 			
 			kernel.log(`Executing command "${command}" (${commands.get(command)?.description})`)
 
-			commands.get(command)?.execute();
+			await commands.get(command)?.execute();
 			
 		} else {
 			kernel.log(`Execution of command "${command}" failed: no such definition`);
 			
 			if (command) kernelFunctions.get("default")?.execute();
 		}
+
+		this.prompt();
 	}
 
 	inputFocusLoop() {
