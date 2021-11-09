@@ -6,11 +6,11 @@ import { userInterface } from "../ui";
 export const intro: CoreFunction = {
   execute: () => {
     kernel.log("Start Core Function 'intro'");
-    
-    userInterface.output(
-      `Welcome to ${environment.pName}!\n` +
-        `You are running version ${environment.pVer}.\n\n` +
-        `${environment.pName} was created by ${environment.vendor}.`
-    );
+
+    userInterface.outputColor(`[█] Welcome to [${environment.pName}]!`, 'var(--purple)');
+    userInterface.outputColor("[█]", 'var(--blue)');
+    userInterface.outputColor(`[█] You are currently running build [${environment.pVer}].`, 'var(--aqua)');
+    userInterface.outputColor("[█]", 'var(--green)');
+    userInterface.outputColor("[█] You can type [HELP] for a list of commands.", 'var(--yellow)');
   },
 };

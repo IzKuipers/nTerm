@@ -28,9 +28,15 @@ class Kernel {
   setIntervals() {
     setInterval(() => {
       if (environment.kHalt) {
-        document.getElementById(environment.iId)?.setAttribute("disabled","true");
+        document.getElementById(environment.iId)?.setAttribute("disabled", "true");
       }
-    },50)
+
+      window.onerror = console.error = () => {
+        this.panic();
+      }
+
+      document.addEventListener("error",() => {this.panic()})
+    }, 50)
   }
 
   panic() {
@@ -38,13 +44,13 @@ class Kernel {
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
     environment.dispOut.innerText = "";
 
-    userInterface.output(`! [ KERNEL PANIC ] !\n\nKernel Log (environment.kLog):\n`)
+    userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
 
     for (let i = 0; i < environment.kLog.length; i++) {
       environment.dispOut.innerText += environment.kLog[i];
     }
 
-    userInterface.output(`\nOH NO! It appears that ${environment.pName} has crashed!\n\nIf this happens more often, please submit an issue at:\nhttps://www.github.com/${environment.vendor}/${environment.pName}/issues/\n\nHit Ctrl+R to reload`);
+    userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);
   }
 
   log(message: string = "") {

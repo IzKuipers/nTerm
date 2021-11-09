@@ -12,10 +12,10 @@ export const gh: Command = {
       if (subCommandMap.has(subCommand)) {
         await (subCommandMap.get(subCommand)!());
       } else {
-        userInterface.output(`"${subCommand}" is not a valid sub-command!`);
+        userInterface.outputColor(`[Error]: "${subCommand}" is not a valid sub-command!`);
       }
     } else {
-      userInterface.output(`No sub-command specified! Type "HELP GH" for help`);
+      userInterface.outputColor(`[Error]: No sub-command specified! Type "HELP GH" for help`);
     }
 
   },
@@ -31,10 +31,13 @@ const subCommandMap = new Map<string, Function>([
       let repos = await GHIntergration.getUserRepos(subSubCommand);
 
       for (let i = 0; i < repos.length; i++) {
-        userInterface.output(
-          `${repos[i].name.padEnd(35, " ")}: ${repos[i].description || "Description Not Found"
-          }`
-        );
+        userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
+        if (repos[i].description) {
+          userInterface.output(repos[i].description);
+        } else {
+          userInterface.outputColor("[Description Not Found]", `var(--gray)`);
+        }
+
       }
     },
   ],
@@ -44,10 +47,13 @@ const subCommandMap = new Map<string, Function>([
       let subSubCommand = environment.argv[1];
       let repos = await GHIntergration.getOrgRepos(subSubCommand);
       for (let i = 0; i < repos.length; i++) {
-        userInterface.output(
-          `${repos[i].name.padEnd(35, " ")}: ${repos[i].description || "Description Not Found"
-          }`
-        );
+        userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
+        if (repos[i].description) {
+          userInterface.output(repos[i].description);
+        } else {
+          userInterface.outputColor("[Description Not Found]", `var(--gray)`);
+        }
+
       }
     },
   ],
@@ -65,7 +71,7 @@ const subCommandMap = new Map<string, Function>([
         userInterface.output(`Last Updated    : ${repo.updated_at}`);
 
       } else {
-        userInterface.output(`Error: failed to fetch repository information: repository not found`)
+        userInterface.outputColor(`[Error]: failed to fetch repository information: repository not found`)
       }
     }
   ],
@@ -89,7 +95,7 @@ const subCommandMap = new Map<string, Function>([
           );
         }
       } else {
-        userInterface.output(`Error: failed to fetch commits: repository not found`)
+        userInterface.outputColor(`[Error]: failed to fetch commits: repository not found`)
       }
     }
   ]

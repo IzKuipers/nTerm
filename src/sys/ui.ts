@@ -3,6 +3,7 @@ import { kernel } from "../kernel";
 import { commands } from "./cmd";
 import { kernelFunctions } from "./kf";
 import { variables, varUtils } from "./vars";
+import { utilities } from "./util";
 
 class UserInterface {
 	output(str: string, lineBreak: boolean = true) {
@@ -29,7 +30,7 @@ class UserInterface {
 
 			kernel.log(`Started userInterface.prompt`);
 
-			this.output(`\n${prompt}`, false);
+			this.outputColor(`\n${prompt}`, 'var(--gray)', false);
 
 			let input = document.createElement("input");
 
@@ -66,16 +67,21 @@ class UserInterface {
 			command = value[0].toLowerCase();
 		}
 
+		environment.cmd = command;
+
 		if (commands.has(command)) {
 			environment.argv = value.slice(1);
-			environment.cmd = command;
 			environment.hist.push(full);
-
+			
 			console.log(environment.hist);
 
 			kernel.log(`Executing command "${command}" (${commands.get(command)?.description})`)
 
-			await commands.get(command)?.execute();
+			try {
+				await commands.get(command)?.execute();
+			} catch (e) {
+				kernel.panic()
+			}
 		} else {
 			kernel.log(`Execution of command "${command}" failed: no such definition`);
 
@@ -102,8 +108,6 @@ class UserInterface {
 			if (list[i].startsWith("$")) {
 				let keyName = list[i].replace("$", "");
 
-				console.log(keyName, variables.get(keyName)?.value);
-
 				if (variables.has(keyName)) {
 					let value = variables.get(keyName)?.value;
 					list[i] = value ?? list[i];
@@ -116,6 +120,22 @@ class UserInterface {
 		text.trimEnd();
 
 		return text;
+	}
+
+	outputColor(text: string, pri: string = "var(--red)", lineBreak: boolean = true, sec: string = "") {
+		const x = text.split(/(\[[^\]]*\])/);
+
+		for (let i = 0; i < x.length; i++) {
+			let s: HTMLSpanElement = document.createElement("span");
+			let isPart: boolean = (x[i].startsWith("[") && x[i].endsWith("]"))
+
+			s.style.color = isPart ? pri : sec;
+			s.innerText = utilities.removeCharsFromString(x[i], ["[", "]"]);
+
+			environment.dispOut.append(s);
+		}
+
+		this.output("", lineBreak);
 	}
 }
 

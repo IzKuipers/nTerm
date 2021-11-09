@@ -12,7 +12,7 @@ export const hist: Command = {
         let indexLength: number = environment.hist.length.toString().length + 1;
 
         for (let i = 0; i < environment.hist.length; i++) {
-            userInterface.output(`${i.toString().padStart(indexLength, "0")}: ${environment.hist[i]}`);
+            userInterface.outputColor(`[${i.toString().padStart(indexLength, "0")}]: ${environment.hist[i]}`,`var(--yellow)`);
         }
     },
     description: "Display the history list",

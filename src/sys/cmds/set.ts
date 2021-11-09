@@ -9,6 +9,7 @@ export const set: Command = {
     let value: string = environment.val.match(/"(.*?)"/)![1];
 
     if (variables.has(name) && variables.get(name)?.readonly) {
+      userInterface.outputColor(`[Error]: `,`var(--red)`,false);
       userInterface.output(`Cannot set readonly variable "${name}".`);
     } else {
       const variable: Variable = {
@@ -18,7 +19,7 @@ export const set: Command = {
 
       variables.set(name, variable);
 
-      userInterface.output(`Variable "${name}" set to "${value}".`);
+      userInterface.outputColor(`Variable [${name}] set to [${value}].`,`var(--blue)`);
     }
 
   },

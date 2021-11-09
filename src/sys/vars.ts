@@ -1,22 +1,22 @@
 import { environment } from "./env";
 
 class VarUtils {
-    replaceVariables(input:string) {
+    replaceVariables(input: string) {
         let text: string = "";
-		let list = input.split(" ");
+        let list = input.split(" ");
 
-		for (let i = 0; i < list.length; i++) {
-			if (list[i].startsWith("$")) {
-				let keyName = list[i].replace("$", "");
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].startsWith("$")) {
+                let keyName = list[i].replace("$", "");
 
-				console.log(keyName, variables.get(keyName)?.value);
+                console.log(keyName, variables.get(keyName)?.value);
 
-				if (variables.has(keyName)) {
-					let value = variables.get(keyName)?.value;
-					list[i] = value ?? list[i];
-				}
-			}	
-		}
+                if (variables.has(keyName)) {
+                    let value = variables.get(keyName)?.value;
+                    list[i] = value ?? list[i];
+                }
+            }
+        }
 
         text = list.join(" ");
 
@@ -26,14 +26,24 @@ class VarUtils {
 
 export const varUtils = new VarUtils();
 
-const prompt: Variable = {
-    value: environment.prompt,
-    readonly: false
-}
-
 const vars = new Map<string, Variable>(
     [
-        ["prompt", prompt]
+        ["PS", {
+            value: environment.prompt,
+            readonly: false
+        }],
+        ["VER", {
+            value: environment.pVer,
+            readonly: true
+        }],
+        ["AUTHOR", {
+            value: environment.vendor,
+            readonly: true
+        }],
+        ["PRODUCTNAME", {
+            value: environment.pName,
+            readonly: true
+        }]
     ]
 );
 

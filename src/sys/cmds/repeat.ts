@@ -17,7 +17,7 @@ export const repeat: Command = {
                 userInterface.evaluateCommand(text, true);
             }
         } else {
-            userInterface.output("Unable to repeat: syntax invalid!");
+            userInterface.outputColor("[Error]: Unable to repeat: syntax invalid!");
         }
     },
 

@@ -9,5 +9,6 @@ try {
   // When an exception occurs, execute kernel.panic and throw the error
  
   kernel.panic();
+  console.log(typeof e);
   throw e;
 }

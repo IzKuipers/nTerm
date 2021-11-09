@@ -9,17 +9,18 @@ export const help: Command = {
       let requestedCommand: string = argv.join(" ").toLowerCase();
 
       if (commands.has(requestedCommand)) {
-        userInterface.output(
-          `\nUsage: ${commands.get(requestedCommand)?.usage}\n\nDescription:\n${commands.get(requestedCommand)?.description}`
-        );
+        userInterface.output("");
+        userInterface.outputColor(`[Usage]: `,`var(--blue)`,false);
+        userInterface.output(`${commands.get(requestedCommand)?.usage}`);
+        userInterface.outputColor(`\n[Description]: ${commands.get(requestedCommand)?.description}`,`var(--blue)`);
       } else {
-        userInterface.output(`Cannot find command "${requestedCommand}"`);
+        userInterface.outputColor(`[Error]: Cannot find command "${requestedCommand}"`);
       }
     } else {
       let cmdList = commands.entries();
 
       for (let i of cmdList) {
-        userInterface.output(`${i[0].toUpperCase().padEnd(10, " ")}${i[1].description}`);
+        userInterface.outputColor(`[${i[0].toUpperCase().padEnd(10, " ")}]${i[1].description}`,`var(--blue)`);
       }
     }
   },

@@ -11,7 +11,7 @@ export const echo: Command = {
 
       userInterface.output(text);
     } else {
-      userInterface.output("Unable to echo: syntax invalid!");
+      userInterface.outputColor("[Error]: Unable to echo: syntax invalid!");
     }
   },
 

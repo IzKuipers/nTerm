@@ -37,6 +37,18 @@ class Utilities {
 
     return separator
   }
+
+  removeCharsFromString(text:string = "",chars:string[] = []) {
+    let list = text.split("");
+
+    for (let i=0;i<list.length;i++) {
+      if (chars.includes(list[i])) {
+        list[i] = "";
+      }
+    }
+
+    return list.join("");
+  }
 }
 
 export const utilities = new Utilities();
