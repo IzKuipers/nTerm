@@ -7,4 +7,5 @@ export const clear: Command = {
 	},
 
 	description: "Clear the screen",
+	usage: "CLEAR"
 };

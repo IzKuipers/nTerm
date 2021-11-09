@@ -1,7 +1,7 @@
 import { kernel } from "../kernel";
 
 class Utilities {
-  getTime(code:Date = new Date()) {
+  getTime(code: Date = new Date()) {
     kernel.log(`Started Utilities.getTime`);
     let today = code;
 
@@ -26,6 +26,16 @@ class Utilities {
     }
 
     return output;
+  }
+
+  createSeparatorFor(text: string) {
+    let separator = "";
+
+    for (let i = 0; i < text.length; i++) {
+      separator += "-";
+    }
+
+    return separator
   }
 }
 

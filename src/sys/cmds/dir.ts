@@ -6,5 +6,6 @@ export const dir: Command = {
         userInterface.output("Error: not implemented")
     },
 
-    description: "Display the contents of the current directory"
+    description: "Display the contents of the current directory",
+    usage: "DIR <path>"
 }

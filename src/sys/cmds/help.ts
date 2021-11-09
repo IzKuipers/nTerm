@@ -5,17 +5,12 @@ import { userInterface } from "../ui";
 export const help: Command = {
   execute: () => {
     if (environment.argv.length > 0) {
-      let requestedCommand: string = "";
       let argv: string[] = environment.argv;
-
-      for (let i = 0; i < argv.length; i++) {
-        requestedCommand += argv[i];
-      }
+      let requestedCommand: string = argv.join(" ").toLowerCase();
 
       if (commands.has(requestedCommand)) {
         userInterface.output(
-          `${requestedCommand.toUpperCase().padEnd(10, " ")}${commands.get(requestedCommand)?.description
-          }`
+          `\nUsage: ${commands.get(requestedCommand)?.usage}\n\nDescription:\n${commands.get(requestedCommand)?.description}`
         );
       } else {
         userInterface.output(`Cannot find command "${requestedCommand}"`);
@@ -30,4 +25,5 @@ export const help: Command = {
   },
 
   description: "Display a list of built-in commands",
+  usage: "HELP [command]"
 };

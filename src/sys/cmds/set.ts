@@ -24,4 +24,5 @@ export const set: Command = {
   },
 
   description: "Set a variable to a given string",
+  usage: `SET <name> "<value>"`
 };

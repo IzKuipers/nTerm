@@ -1,6 +1,7 @@
 export interface Command {
   execute: () => void;
   description?: string;
+  usage: string
 }
 
 export const commands = new Map<string, Command>([
@@ -12,6 +13,8 @@ export const commands = new Map<string, Command>([
   ["panic", await panic],
   ["dir", await dir],
   ["gh", await gh],
+  ["hist", await hist],
+  ["repeat", await repeat]
 ]);
 
 import { help } from "./cmds/help";
@@ -22,3 +25,5 @@ import { set } from "./cmds/set";
 import { panic } from "./cmds/panic";
 import { dir } from "./cmds/dir";
 import { gh } from "./cmds/gh";
+import { hist } from "./cmds/hist";
+import { repeat } from "./cmds/repeat";

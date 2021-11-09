@@ -8,4 +8,5 @@ export const ver: Command = {
   },
 
   description: "Display the version information",
+  usage: "VER"
 };

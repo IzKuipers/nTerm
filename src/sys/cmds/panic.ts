@@ -3,8 +3,9 @@ import { Command } from "../cmd";
 
 export const panic: Command = {
   execute: () => {
-      kernel.panic();
+    kernel.panic();
   },
 
   description: "Cause a kernel panic",
+  usage: "PANIC"
 };
