@@ -5,16 +5,16 @@ export interface Command {
 }
 
 export const commands = new Map<string, Command>([
-  ["help", await help],
-  ["clear", await clear],
-  ["ver", await ver],
-  ["echo", await echo],
-  ["set", await set],
-  ["panic", await panic],
-  ["dir", await dir],
-  ["gh", await gh],
-  ["hist", await hist],
-  ["repeat", await repeat]
+  ["help", help],
+  ["clear", clear],
+  ["ver", ver],
+  ["echo", echo],
+  ["set", set],
+  ["panic", panic],
+  ["dir", dir],
+  ["gh", gh],
+  ["hist", hist],
+  ["repeat", repeat]
 ]);
 
 import { help } from "./cmds/help";
