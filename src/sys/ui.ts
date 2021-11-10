@@ -7,12 +7,18 @@ import { utilities } from "./util";
 
 class UserInterface {
 	output(str: string, lineBreak = true) {
+		this.flushBufferToTemp();
+
 		const text = varUtils.replaceVariables(str);
 
 		const span = document.createElement("span");
 		span.innerText = `${text}${lineBreak ? "\n" : ""}`;
 
-		environment.dispOut.append(span);
+		environment.temp.append(span);
+
+		this.flushTempToBuffer();
+
+		this.syncTarget();
 	}
 
 	error(str: string, lineBreak = true) {
@@ -21,6 +27,8 @@ class UserInterface {
 
 	prompt() {
 		if (!environment.kHalt) {
+			this.flushBufferToTemp();
+
 			kernel.log(`Started userInterface.prompt`);
 			const prompt = this.getPrompt();
 
@@ -44,7 +52,10 @@ class UserInterface {
 			input.spellcheck = false;
 
 			environment.iId = input.id;
-			environment.dispOut.append(input);
+			environment.temp.append(input);
+
+			this.flushTempToBuffer();
+			//this.syncTarget();
 
 			this.output("");
 		}
@@ -83,6 +94,7 @@ class UserInterface {
 			kernel.log(`Executing command "${command}" (${commands.get(command)?.description})`)
 
 			try {
+				(document.getElementById(environment.iId)! as HTMLInputElement).value = full;
 				await commands.get(command)?.execute();
 			} catch (e) {
 				kernel.panic()
@@ -90,6 +102,7 @@ class UserInterface {
 		} else {
 			kernel.log(`Execution of command "${command}" failed: no such definition`);
 
+			(document.getElementById(environment.iId)! as HTMLInputElement).value = full;
 			if (command) kernelFunctions.get("default")?.execute();
 		}
 
@@ -128,6 +141,7 @@ class UserInterface {
 	}
 
 	outputColor(text: string, pri = "var(--red)", lineBreak = true, sec = "") {
+		this.flushBufferToTemp();
 		const x = text.split(/(\[[^\]]*\])/);
 
 		for (let i = 0; i < x.length; i++) {
@@ -137,10 +151,27 @@ class UserInterface {
 			s.style.color = isPart ? pri : sec;
 			s.innerText = utilities.removeCharsFromString(x[i], ["[", "]"]);
 
-			environment.dispOut.append(s);
+			environment.temp.append(s);
 		}
 
+		this.flushTempToBuffer();
+		//this.syncTarget();
+
 		this.output("", lineBreak);
+	}
+
+	flushTempToBuffer() {
+		environment.instance.buffer = environment.temp.innerHTML;
+
+		//this.syncTarget();
+	}
+
+	flushBufferToTemp() {
+		environment.temp.innerHTML = environment.instance.buffer;
+	}
+
+	syncTarget() {
+		environment.instance.target.innerHTML = environment.instance.buffer;
 	}
 }
 

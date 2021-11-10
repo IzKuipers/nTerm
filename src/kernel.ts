@@ -2,7 +2,8 @@ import { environment } from "./sys/env";
 import { userInterface } from "./sys/ui";
 import { keyboard } from "./sys/kb";
 import { kernelFunctions } from "./sys/cf";
-import { themeHandler} from "./sys/themes";
+import { themeHandler } from "./sys/themes";
+import { Instance, instanceHandler } from "./sys/instance";
 class Kernel {
   init(target: HTMLElement) {
     if (target) {
@@ -17,7 +18,15 @@ class Kernel {
       themeHandler.loadStoredTheme();
 
       this.log(`Setting environment.displayOutput to ${target}...`);
-      environment.dispOut = target;
+      const instance: Instance = {
+        target: document.getElementById("app")!,
+        buffer: "hello, world!",
+      }
+
+      instanceHandler.loadInstance(instance);
+
+      userInterface.output("asdf")
+      userInterface.syncTarget();
 
       this.log("Started commands.intro");
       kernelFunctions.get("intro")?.execute();
@@ -37,19 +46,20 @@ class Kernel {
         this.panic();
       }
 
-      document.addEventListener("error",() => {this.panic()})
+      document.addEventListener("error", () => { this.panic() })
     }, 50)
   }
 
   panic() {
     environment.kHalt = true;
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
-    environment.dispOut.innerText = "";
+    environment.instance.target.innerText = environment.instance.buffer = "";
 
     userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
 
     for (let i = 0; i < environment.kLog.length; i++) {
-      environment.dispOut.innerText += environment.kLog[i];
+      userInterface.output(environment.kLog[i])
+      userInterface.syncTarget();
     }
 
     userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);

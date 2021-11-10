@@ -5,6 +5,7 @@ export interface Theme {
     path: () => void,
     name: string,
     author: string,
+    className: string
 }
 
 export const Themes = new Map<string, Theme>(
@@ -12,17 +13,20 @@ export const Themes = new Map<string, Theme>(
         [environment.defaultTheme, {
             path: async () => import("../themes/default.scss"),
             name: environment.defaultTheme,
-            author: environment.vendor
+            author: environment.vendor,
+            className: "color-scheme-default"
         }],
         ["gruvbox", {
             path: async () => import("../themes/gruvbox.scss"),
             name: "Gruvbox Dark",
-            author: "github/morhertz"
+            author: "github/morhertz",
+            className: "color-scheme-gruvbox"
         }],
         ["nord", {
             path: async () => import("../themes/nord.scss"),
             name: "Nord",
-            author: "Arctic Ice Studio"
+            author: "Arctic Ice Studio",
+            className: "color-scheme-nord"
         }]
     ]
 )
@@ -30,9 +34,13 @@ export const Themes = new Map<string, Theme>(
 class ThemeHandler {
     async applyTheme(name: string) {
         if (Themes.has(name)) {
+            environment.oldTheme = environment.CurrentTheme;
             environment.CurrentTheme = name;
 
             await Themes.get(name)?.path();
+
+            document.body.classList.remove(Themes.get(environment.oldTheme)?.className || `color-scheme-${environment.defaultTheme}`)
+            document.body.classList.add(Themes.get(name)?.className || `color-scheme-${environment.defaultTheme}`);
 
             localStorage.setItem("theme", environment.CurrentTheme);
 
@@ -40,8 +48,6 @@ class ThemeHandler {
                 value: name,
                 readonly: true
             });
-
-            this.loadStoredTheme();
 
             return true;
         }

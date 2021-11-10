@@ -1,6 +1,8 @@
+import { Instance } from "./instance";
+
 class Environment {
   // HTML Elements
-  dispOut: HTMLElement = document.body;
+  temp: HTMLElement = document.getElementById('tmp')!;
 
   // Writable strings
   iId = ""; // Input ID
@@ -9,6 +11,7 @@ class Environment {
   path = "/" // Current Path
   promptVarName = "PS"
   CurrentTheme = "";
+  oldTheme = "";
 
   // Readonly Strings
   readonly vendor: string = "TechWorldInc"; // Author
@@ -16,7 +19,7 @@ class Environment {
   readonly pVer: string = "2.0"; // Product Version
   readonly defaultTheme: string = "default"; // Default Theme
   readonly prompt: string = `[${this.path}]\n$`; // Prompt String
-  
+
   // String Arrays
   hist: string[] = []; // History List
   kLog: string[] = []; // Kernel Log
@@ -27,6 +30,9 @@ class Environment {
 
   // Bools
   kHalt = false; // Kernel Halt
+
+  // Instance
+  instance!: Instance;
 }
 
 export const environment = new Environment();

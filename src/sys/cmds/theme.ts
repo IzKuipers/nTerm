@@ -7,11 +7,11 @@ export const theme:Command = {
     execute: async () => {
         const name = environment.argv[0];
 
-        if (await themeHandler.applyTheme(name)) {
+        if (await themeHandler.applyTheme(name) && name) {
             userInterface.outputColor(`Applied theme [${Themes.get(name)?.name}] by [${Themes.get(name)?.author}]`,`var(--blue)`);
             return;
         }
-        userInterface.error(`Theme "${name}" not found`);
+        userInterface.error(`Unable to apply theme: not found`);
     },
 
     description: "Applies the specified theme",
