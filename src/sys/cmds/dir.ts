@@ -3,7 +3,7 @@ import { userInterface } from "../ui";
 
 export const dir: Command = {
     execute: () => {
-        userInterface.outputColor("[Error]: not implemented")
+        userInterface.error("not implemented")
     },
 
     description: "Display the contents of the current directory",

@@ -5,8 +5,8 @@ import { userInterface } from "../ui";
 export const help: Command = {
   execute: () => {
     if (environment.argv.length > 0) {
-      let argv: string[] = environment.argv;
-      let requestedCommand: string = argv.join(" ").toLowerCase();
+      const argv: string[] = environment.argv;
+      const requestedCommand: string = argv.join(" ").toLowerCase();
 
       if (commands.has(requestedCommand)) {
         userInterface.output("");
@@ -14,13 +14,13 @@ export const help: Command = {
         userInterface.output(`${commands.get(requestedCommand)?.usage}`);
         userInterface.outputColor(`\n[Description]: ${commands.get(requestedCommand)?.description}`,`var(--blue)`);
       } else {
-        userInterface.outputColor(`[Error]: Cannot find command "${requestedCommand}"`);
+        userInterface.error(`Cannot find command "${requestedCommand}"`);
       }
     } else {
-      let cmdList = commands.entries();
+      const cmdList = commands.entries();
 
-      for (let i of cmdList) {
-        userInterface.outputColor(`[${i[0].toUpperCase().padEnd(10, " ")}]${i[1].description}`,`var(--blue)`);
+      for (const cmd of cmdList) {
+        userInterface.outputColor(`[${cmd[0].toUpperCase().padEnd(10, " ")}]${cmd[1].description}`,`var(--blue)`);
       }
     }
   },

@@ -3,7 +3,7 @@ import { kernel } from "../kernel";
 class Utilities {
   getTime(code: Date = new Date()) {
     kernel.log(`Started Utilities.getTime`);
-    let today = code;
+    const today = code;
 
     return {
       h: today.getHours().toString().padStart(2, "0"),
@@ -38,10 +38,10 @@ class Utilities {
     return separator
   }
 
-  removeCharsFromString(text:string = "",chars:string[] = []) {
-    let list = text.split("");
+  removeCharsFromString(text = "", chars: string[] = []) {
+    const list = text.split("");
 
-    for (let i=0;i<list.length;i++) {
+    for (let i = 0; i < list.length; i++) {
       if (chars.includes(list[i])) {
         list[i] = "";
       }
@@ -50,14 +50,14 @@ class Utilities {
     return list.join("");
   }
 
-  unescapeSlashes(str:string) {
+  unescapeSlashes(str: string) {
     let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
 
     parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");
-  
+
     try {
       parsedStr = JSON.parse(`"${parsedStr}"`);
-    } catch(e) {
+    } catch (e) {
       return str;
     }
     return parsedStr;

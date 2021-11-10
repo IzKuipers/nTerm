@@ -4,14 +4,14 @@ import { userInterface } from "../ui";
 
 export const echo: Command = {
   execute: () => {
-    let Regx = environment.val.match(/"(.*?)"/)!;
+    const Regx = environment.val.match(/"(.*?)"/);
 
     if (Regx && Regx.length > 1) {
-      let text = Regx[1];
+      const text = Regx[1];
 
       userInterface.output(text);
     } else {
-      userInterface.outputColor("[Error]: Unable to echo: syntax invalid!");
+      userInterface.error("Unable to echo: syntax invalid!");
     }
   },
 

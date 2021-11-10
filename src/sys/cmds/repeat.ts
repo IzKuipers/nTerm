@@ -3,10 +3,10 @@ import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const repeat: Command = {
-    execute: () => {
-        let Regx: RegExpMatchArray = environment.val.match(/"(.*?)"/)!;
-        let text: string = "";
-        let amnt: number = parseInt(environment.argv[0]);
+    execute: async () => {
+        const Regx: RegExpMatchArray | null = environment.val.match(/"(.*?)"/);
+        let text = "";
+        const amnt: number = parseInt(environment.argv[0]);
 
         if (Regx && Regx.length > 1 && !!amnt) {
             text = Regx[1];
@@ -14,10 +14,10 @@ export const repeat: Command = {
             userInterface.output(`Repeating "${text}" ${amnt} times...\n`);
 
             for (let i = 0; i < amnt; i++) {
-                userInterface.evaluateCommand(text, true);
+                await userInterface.evaluateCommand(text, true);
             }
         } else {
-            userInterface.outputColor("[Error]: Unable to repeat: syntax invalid!");
+            userInterface.error("Unable to repeat: syntax invalid!");
         }
     },
 

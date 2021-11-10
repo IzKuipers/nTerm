@@ -2,17 +2,17 @@ import { environment } from "./env";
 
 class VarUtils {
     replaceVariables(input: string) {
-        let text: string = "";
-        let list = input.split(" ");
+        let text = "";
+        const list = input.split(" ");
 
         for (let i = 0; i < list.length; i++) {
             if (list[i].startsWith("$")) {
-                let keyName = list[i].replace("$", "");
+                const keyName = list[i].replace("$", "");
 
                 console.log(keyName, variables.get(keyName)?.value);
 
                 if (variables.has(keyName)) {
-                    let value = variables.get(keyName)?.value;
+                    const value = variables.get(keyName)?.value;
                     list[i] = value ?? list[i];
                 }
             }
@@ -42,6 +42,10 @@ const vars = new Map<string, Variable>(
         }],
         ["PRODUCTNAME", {
             value: environment.pName,
+            readonly: true
+        }],
+        ["THEME", {
+            value: environment.CurrentTheme || environment.defaultTheme,
             readonly: true
         }]
     ]

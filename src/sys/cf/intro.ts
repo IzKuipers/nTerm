@@ -1,6 +1,6 @@
 import { kernel } from "../../kernel";
 import { environment } from "../env";
-import { CoreFunction } from "../kf";
+import { CoreFunction } from "../cf";
 import { userInterface } from "../ui";
 
 export const intro: CoreFunction = {
@@ -11,6 +11,8 @@ export const intro: CoreFunction = {
     userInterface.outputColor("[█]", 'var(--blue)');
     userInterface.outputColor(`[█] You are currently running build [${environment.pVer}].`, 'var(--aqua)');
     userInterface.outputColor("[█]", 'var(--green)');
-    userInterface.outputColor("[█] You can type [HELP] for a list of commands.", 'var(--yellow)');
+    userInterface.outputColor(`[█] Current theme is [${localStorage.getItem("theme") || environment.defaultTheme}].`, 'var(--yellow)');
+    userInterface.outputColor("[█]", 'var(--orange)');
+    userInterface.outputColor("[█] You can type [help] for a list of commands.", 'var(--red)');
   },
 };

@@ -9,7 +9,7 @@ export const hist: Command = {
             return;
         }
 
-        let indexLength: number = environment.hist.length.toString().length + 1;
+        const indexLength: number = environment.hist.length.toString().length + 1;
 
         for (let i = 0; i < environment.hist.length; i++) {
             userInterface.outputColor(`[${i.toString().padStart(indexLength, "0")}]: ${environment.hist[i]}`,`var(--yellow)`);

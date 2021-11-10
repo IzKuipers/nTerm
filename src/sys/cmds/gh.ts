@@ -7,15 +7,15 @@ import { utilities } from "../util";
 export const gh: Command = {
   execute: async () => {
     if (environment.argv.length) {
-      let subCommand = environment.argv[0].toLowerCase();
+      const subCommand = environment.argv[0].toLowerCase();
 
       if (subCommandMap.has(subCommand)) {
-        await (subCommandMap.get(subCommand)!());
+        await (subCommandMap.get(subCommand)?.());
       } else {
-        userInterface.outputColor(`[Error]: "${subCommand}" is not a valid sub-command!`);
+        userInterface.error(`"${subCommand}" is not a valid sub-command!`);
       }
     } else {
-      userInterface.outputColor(`[Error]: No sub-command specified! Type "HELP GH" for help`);
+      userInterface.error(`No sub-command specified! Type "HELP GH" for help`);
     }
 
   },
@@ -23,12 +23,12 @@ export const gh: Command = {
   usage: "GH <userrepo|orgrepo|repo|commits> <user/repo|user|org>"
 };
 
-const subCommandMap = new Map<string, Function>([
+const subCommandMap = new Map<string,() => void>([
   [
     "userrepo",
     async () => {
-      let subSubCommand = environment.argv[1];
-      let repos = await GHIntergration.getUserRepos(subSubCommand);
+      const subSubCommand = environment.argv[1];
+      const repos = await GHIntergration.getUserRepos(subSubCommand);
 
       for (let i = 0; i < repos.length; i++) {
         userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
@@ -44,8 +44,8 @@ const subCommandMap = new Map<string, Function>([
   [
     "orgrepo",
     async () => {
-      let subSubCommand = environment.argv[1];
-      let repos = await GHIntergration.getOrgRepos(subSubCommand);
+      const subSubCommand = environment.argv[1];
+      const repos = await GHIntergration.getOrgRepos(subSubCommand);
       for (let i = 0; i < repos.length; i++) {
         userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
         if (repos[i].description) {
@@ -60,8 +60,8 @@ const subCommandMap = new Map<string, Function>([
   [
     "repo",
     async () => {
-      let subSubCommand = environment.argv[1];
-      let repo = await GHIntergration.getRepoDetails(subSubCommand);
+      const subSubCommand = environment.argv[1];
+      const repo = await GHIntergration.getRepoDetails(subSubCommand);
       if (!repo.message && !repo.documentation_url) {
         userInterface.output(`Owner           : ${repo.owner.login}`);
         userInterface.output(`Full Name       : ${repo.full_name}`);
@@ -71,20 +71,20 @@ const subCommandMap = new Map<string, Function>([
         userInterface.output(`Last Updated    : ${repo.updated_at}`);
 
       } else {
-        userInterface.outputColor(`[Error]: failed to fetch repository information: repository not found`)
+        userInterface.error(`failed to fetch repository information: repository not found`)
       }
     }
   ],
   [
     "commits",
     async () => {
-      let subSubCommand = environment.argv[1];
-      let commits = await GHIntergration.getCommits(subSubCommand);
+      const subSubCommand = environment.argv[1];
+      const commits = await GHIntergration.getCommits(subSubCommand);
 
       if (!commits.message && !commits.documentation_url) {
         userInterface.output("");
         for (let i = 0; i < commits.length; i++) {
-          let title = `Commit ${commits[i].sha}`;
+          const title = `Commit ${commits[i].sha}`;
           userInterface.output(
             `${title}\n` +
             `${utilities.createSeparatorFor(title)}\n` +
@@ -95,7 +95,7 @@ const subCommandMap = new Map<string, Function>([
           );
         }
       } else {
-        userInterface.outputColor(`[Error]: failed to fetch commits: repository not found`)
+        userInterface.error(`failed to fetch commits: repository not found`)
       }
     }
   ]

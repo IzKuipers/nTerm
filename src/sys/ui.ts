@@ -1,24 +1,28 @@
 import { environment } from "./env";
 import { kernel } from "../kernel";
 import { commands } from "./cmd";
-import { kernelFunctions } from "./kf";
+import { kernelFunctions } from "./cf";
 import { variables, varUtils } from "./vars";
 import { utilities } from "./util";
 
 class UserInterface {
-	output(str: string, lineBreak: boolean = true) {
-		let text = varUtils.replaceVariables(str);
+	output(str: string, lineBreak = true) {
+		const text = varUtils.replaceVariables(str);
 
-		let span = document.createElement("span");
+		const span = document.createElement("span");
 		span.innerText = `${text}${lineBreak ? "\n" : ""}`;
 
 		environment.dispOut.append(span);
 	}
 
+	error(str: string, lineBreak = true) {
+		this.outputColor(`[Error]: ${str}`, `var(--red)`, lineBreak);
+	}
+
 	prompt() {
 		if (!environment.kHalt) {
 			kernel.log(`Started userInterface.prompt`);
-			let prompt = this.getPrompt();
+			const prompt = this.getPrompt();
 
 			if (environment.iId) {
 				kernel.log(`Unfocused input ${environment.iId}`);
@@ -32,7 +36,7 @@ class UserInterface {
 
 			this.outputColor(`\n${prompt}`, 'var(--gray)', false);
 
-			let input = document.createElement("input");
+			const input = document.createElement("input");
 
 			input.className = "input";
 			input.id = `#${Math.floor(Math.random() * 999999999)}`;
@@ -49,9 +53,10 @@ class UserInterface {
 	async evaluateCommand(override?: string, noPrompt?: boolean) {
 		kernel.log(`Started userInterface.evaluateCommand`);
 
-		let input: HTMLInputElement = document.getElementById(
+		const input: HTMLInputElement = document.getElementById(
 			environment.iId
-		) as HTMLInputElement;;
+		) as HTMLInputElement;
+
 		let value: string[];
 		let command: string;
 		let full: string;
@@ -72,7 +77,7 @@ class UserInterface {
 		if (commands.has(command)) {
 			environment.argv = value.slice(1);
 			environment.hist.push(full);
-			
+
 			console.log(environment.hist);
 
 			kernel.log(`Executing command "${command}" (${commands.get(command)?.description})`)
@@ -92,8 +97,8 @@ class UserInterface {
 	}
 
 	inputFocusLoop() {
-		let ival = setInterval(() => {
-			let input = document.getElementById(environment.iId);
+		const ival = setInterval(() => {
+			const input = document.getElementById(environment.iId);
 
 			if (input) input.focus();
 			if (environment.kHalt) clearInterval(ival);
@@ -102,14 +107,14 @@ class UserInterface {
 
 	getPrompt() {
 		let text = "";
-		let list = (variables.get(environment.promptVarName)?.value || environment.prompt).split(" ");
+		const list = (variables.get(environment.promptVarName)?.value || environment.prompt).split(" ");
 
 		for (let i = 0; i < list.length; i++) {
 			if (list[i].startsWith("$")) {
-				let keyName = list[i].replace("$", "");
+				const keyName = list[i].replace("$", "");
 
 				if (variables.has(keyName)) {
-					let value = variables.get(keyName)?.value;
+					const value = variables.get(keyName)?.value;
 					list[i] = value ?? list[i];
 				}
 			}
@@ -122,12 +127,12 @@ class UserInterface {
 		return text;
 	}
 
-	outputColor(text: string, pri: string = "var(--red)", lineBreak: boolean = true, sec: string = "") {
+	outputColor(text: string, pri = "var(--red)", lineBreak = true, sec = "") {
 		const x = text.split(/(\[[^\]]*\])/);
 
 		for (let i = 0; i < x.length; i++) {
-			let s: HTMLSpanElement = document.createElement("span");
-			let isPart: boolean = (x[i].startsWith("[") && x[i].endsWith("]"))
+			const s: HTMLSpanElement = document.createElement("span");
+			const isPart: boolean = (x[i].startsWith("[") && x[i].endsWith("]"))
 
 			s.style.color = isPart ? pri : sec;
 			s.innerText = utilities.removeCharsFromString(x[i], ["[", "]"]);

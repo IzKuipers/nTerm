@@ -6,7 +6,7 @@ NetCMD 2.0 is a continuation of [TechWorldInc/NetCMD](https://www.github.com/Tec
 > 🌎 Test NetCMD 2.0 out: [NetCMD 2.0 public test](https://www.techworldinc.tk/NetCMD/)
 
 ## Usage
-When you open NetCMD, you will be greated by the `intro` `CoreFunction` ([`src/sys/kf/intro.ts`](https://github.com/TechWorldInc/NetCMD-2.0/blob/main/src/sys/kf/intro.ts)). Because this is a CoreFunction ([`CoreFunction` interface can be found here](https://github.com/TechWorldInc/NetCMD-2.0/blob/main/src/sys/kf.ts)), it will not be recognized when you, the user, types it into the prompt.
+When you open NetCMD, you will be greated by the `intro` `CoreFunction` ([`src/sys/f/intro.ts`](https://github.com/TechWorldInc/NetCMD-2.0/blob/main/src/sys/cf/intro.ts)). Because this is a CoreFunction ([`CoreFunction` interface can be found here](https://github.com/TechWorldInc/NetCMD-2.0/blob/main/src/sys/cf.ts)), it will not be recognized when you, the user, types it into the prompt.
 
 If you want a list of available commands, just type `HELP` in the prompt. To get the usage and description about a command, type `HELP <COMMAND>` (e.g. `help gh`).
 
@@ -27,7 +27,7 @@ NetCMD uses `interfaces`, here is a list of the common ones:
 
 > **Interface `CoreFunction`**
 >
-> Location:[`/src/sys/kf.ts`](https://github.com/TechWorldInc/NetCMD-2.0/blob/main/src/sys/kf.ts)
+> Location:[`/src/sys/cf.ts`](https://github.com/TechWorldInc/NetCMD-2.0/blob/main/src/sys/cf.ts)
 > ```ts
 > // This is the interface used for internal functions
 > interface CoreFunction {

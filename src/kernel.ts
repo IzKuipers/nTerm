@@ -1,8 +1,8 @@
 import { environment } from "./sys/env";
 import { userInterface } from "./sys/ui";
 import { keyboard } from "./sys/kb";
-import { kernelFunctions } from "./sys/kf";
-
+import { kernelFunctions } from "./sys/cf";
+import { themeHandler} from "./sys/themes";
 class Kernel {
   init(target: HTMLElement) {
     if (target) {
@@ -13,6 +13,8 @@ class Kernel {
       userInterface.inputFocusLoop();
 
       keyboard.register();
+
+      themeHandler.loadStoredTheme();
 
       this.log(`Setting environment.displayOutput to ${target}...`);
       environment.dispOut = target;
@@ -53,8 +55,8 @@ class Kernel {
     userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);
   }
 
-  log(message: string = "") {
-    let time = new Date().getTime() - environment.kStartTime;
+  log(message = "") {
+    const time = new Date().getTime() - environment.kStartTime;
 
     environment.kLog.push(`[${time}] ${message}\n`);
   }

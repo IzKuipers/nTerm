@@ -1,6 +1,6 @@
 class GitHubIntergration {
   async getUserRepos(username: string) {
-    let data = await fetch(`https://api.github.com/users/${username}/repos`)
+    const data = await fetch(`https://api.github.com/users/${username}/repos`)
       .then((response) => response.json())
       .then((json) => {
         return json;
@@ -12,7 +12,7 @@ class GitHubIntergration {
   }
 
   async getOrgRepos(orgname: string) {
-    let data = await fetch(`https://api.github.com/orgs/${orgname}/repos`)
+    const data = await fetch(`https://api.github.com/orgs/${orgname}/repos`)
       .then((response) => response.json())
       .then((json) => {
         return json;
@@ -24,7 +24,7 @@ class GitHubIntergration {
   }
 
   async getRepoDetails(repo: string) {
-    let data = await fetch(`https://api.github.com/repos/${repo}`)
+    const data = await fetch(`https://api.github.com/repos/${repo}`)
       .then((response) => response.json())
       .then((json) => {
         return json;
@@ -36,7 +36,7 @@ class GitHubIntergration {
   }
 
   async getCommits(repo:string) {
-    let data = await fetch(`https://api.github.com/repos/${repo}/commits`)
+    const data = await fetch(`https://api.github.com/repos/${repo}/commits`)
     .then((response) => response.json())
     .then((json) => {
       return json;
