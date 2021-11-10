@@ -29,6 +29,7 @@ class Utilities {
   }
 
   createSeparatorFor(text: string) {
+    kernel.log(`Started Utilities.createSeperatorFor`);
     let separator = "";
 
     for (let i = 0; i < text.length; i++) {
@@ -39,6 +40,7 @@ class Utilities {
   }
 
   removeCharsFromString(text = "", chars: string[] = []) {
+    kernel.log(`Started Utilities.removeCharsFromString`);
     const list = text.split("");
 
     for (let i = 0; i < list.length; i++) {
@@ -51,6 +53,7 @@ class Utilities {
   }
 
   unescapeSlashes(str: string) {
+    kernel.log(`Started Utilities.unescapeSlashes`);
     let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
 
     parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");

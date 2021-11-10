@@ -6,173 +6,188 @@ import { variables, varUtils } from "./vars";
 import { utilities } from "./util";
 
 class UserInterface {
-	output(str: string, lineBreak = true) {
-		this.flushBufferToTemp();
+  output(str: string, lineBreak = true) {
+    const text = varUtils.replaceVariables(str);
 
-		const text = varUtils.replaceVariables(str);
+    const span = document.createElement("span");
+    span.innerHTML = `${text}${lineBreak ? "\n" : ""}`;
 
-		const span = document.createElement("span");
-		span.innerText = `${text}${lineBreak ? "\n" : ""}`;
+    environment.temp.append(span);
 
-		environment.temp.append(span);
+    this.flushTempToBuffer();
 
-		this.flushTempToBuffer();
+    this.syncTarget();
+  }
 
-		this.syncTarget();
-	}
+  error(str: string, lineBreak = true) {
+    this.outputColor(`[Error]: ${str}`, `var(--red)`, lineBreak);
+  }
 
-	error(str: string, lineBreak = true) {
-		this.outputColor(`[Error]: ${str}`, `var(--red)`, lineBreak);
-	}
+  prompt() {
+    if (!environment.kHalt) {
+      kernel.log(`Started userInterface.prompt`);
+      const prompt = this.getPrompt();
 
-	prompt() {
-		if (!environment.kHalt) {
-			this.flushBufferToTemp();
+      if (environment.iId) {
+        kernel.log(`Unfocused input ${environment.iId}`);
 
-			kernel.log(`Started userInterface.prompt`);
-			const prompt = this.getPrompt();
+        const input = document.getElementById(
+          environment.iId
+        ) as HTMLInputElement;
 
-			if (environment.iId) {
-				kernel.log(`Unfocused input ${environment.iId}`);
+        const span = document.createElement("span");
+        span.innerText = environment.val;
+        span.id = "as";
+        console.warn(environment.val);
 
-				document
-					.getElementById(environment.iId)
-					?.setAttribute("disabled", "true");
-			}
+        try {
+          input.insertAdjacentElement("beforebegin", span);
 
-			kernel.log(`Started userInterface.prompt`);
+          input.remove();
+        } catch {}
 
-			this.outputColor(`\n${prompt}`, 'var(--gray)', false);
+        environment.instance.buffer = environment.instance.target.innerHTML;
+      }
 
-			const input = document.createElement("input");
+      this.flushBufferToTemp();
 
-			input.className = "input";
-			input.id = `#${Math.floor(Math.random() * 999999999)}`;
-			input.style.width = `calc(100% - ${prompt.length}em)`;
-			input.spellcheck = false;
+      kernel.log(`Started userInterface.prompt`);
 
-			environment.iId = input.id;
-			environment.temp.append(input);
+      this.outputColor(`\n${prompt}`, "var(--gray)", false);
 
-			this.flushTempToBuffer();
-			//this.syncTarget();
+      const input = document.createElement("input");
 
-			this.output("");
-		}
-	}
+      input.className = "input";
+      input.id = `#${Math.floor(Math.random() * 999999999)}`;
+      input.style.width = `calc(100% - ${prompt.length}em)`;
+      input.spellcheck = false;
 
-	async evaluateCommand(override?: string, noPrompt?: boolean) {
-		kernel.log(`Started userInterface.evaluateCommand`);
+      environment.iId = input.id;
+      environment.temp.append(input);
 
-		const input: HTMLInputElement = document.getElementById(
-			environment.iId
-		) as HTMLInputElement;
+      this.flushTempToBuffer();
 
-		let value: string[];
-		let command: string;
-		let full: string;
+      this.output("");
+    }
+  }
 
-		if (!override) {
-			full = input.value;
-			environment.val = input?.value;
-			value = input?.value.split(" ");
-			command = value[0].toLowerCase();
-		} else {
-			full = override;
-			value = override.split(" ");
-			command = value[0].toLowerCase();
-		}
+  async evaluateCommand(override?: string, noPrompt?: boolean) {
+    kernel.log(`Started userInterface.evaluateCommand`);
 
-		environment.cmd = command;
+    const input: HTMLInputElement = document.getElementById(
+      environment.iId
+    ) as HTMLInputElement;
 
-		if (commands.has(command)) {
-			environment.argv = value.slice(1);
-			environment.hist.push(full);
+    let value: string[];
+    let command: string;
+    let full: string;
 
-			console.log(environment.hist);
+    if (!override) {
+      full = input.value;
+      environment.val = input?.value;
+      value = input?.value.split(" ");
+      command = value[0].toLowerCase();
+    } else {
+      full = override;
+      value = override.split(" ");
+      command = value[0].toLowerCase();
+    }
 
-			kernel.log(`Executing command "${command}" (${commands.get(command)?.description})`)
+    environment.cmd = command;
 
-			try {
-				(document.getElementById(environment.iId)! as HTMLInputElement).value = full;
-				await commands.get(command)?.execute();
-			} catch (e) {
-				kernel.panic()
-			}
-		} else {
-			kernel.log(`Execution of command "${command}" failed: no such definition`);
+    if (commands.has(command)) {
+      environment.argv = value.slice(1);
+      environment.hist.push(full);
 
-			(document.getElementById(environment.iId)! as HTMLInputElement).value = full;
-			if (command) kernelFunctions.get("default")?.execute();
-		}
+      console.log(environment.hist);
 
-		if (!noPrompt) this.prompt();
-	}
+      kernel.log(
+        `Executing command "${command}" (${commands.get(command)?.description})`
+      );
 
-	inputFocusLoop() {
-		const ival = setInterval(() => {
-			const input = document.getElementById(environment.iId);
+      try {
+        await commands.get(command)?.execute();
+      } catch (e) {
+        kernel.panic();
+      }
+    } else {
+      kernel.log(
+        `Execution of command "${command}" failed: no such definition`
+      );
 
-			if (input) input.focus();
-			if (environment.kHalt) clearInterval(ival);
-		}, 50);
-	}
+      (document.getElementById(environment.iId)! as HTMLInputElement).value =
+        full;
+      if (command) kernelFunctions.get("default")?.execute();
+    }
 
-	getPrompt() {
-		let text = "";
-		const list = (variables.get(environment.promptVarName)?.value || environment.prompt).split(" ");
+    if (!noPrompt) this.prompt();
+  }
 
-		for (let i = 0; i < list.length; i++) {
-			if (list[i].startsWith("$")) {
-				const keyName = list[i].replace("$", "");
+  inputFocusLoop() {
+    const ival = setInterval(() => {
+      const input = document.getElementById(environment.iId);
 
-				if (variables.has(keyName)) {
-					const value = variables.get(keyName)?.value;
-					list[i] = value ?? list[i];
-				}
-			}
+      if (input) input.focus();
+      if (environment.kHalt) clearInterval(ival);
+    }, 50);
+  }
 
-			text += `${list[i]} `;
-		}
+  getPrompt() {
+    let text = "";
+    const list = (
+      variables.get(environment.promptVarName)?.value || environment.prompt
+    ).split(" ");
 
-		text.trimEnd();
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].startsWith("$")) {
+        const keyName = list[i].replace("$", "");
 
-		return text;
-	}
+        if (variables.has(keyName)) {
+          const value = variables.get(keyName)?.value;
+          list[i] = value ?? list[i];
+        }
+      }
 
-	outputColor(text: string, pri = "var(--red)", lineBreak = true, sec = "") {
-		this.flushBufferToTemp();
-		const x = text.split(/(\[[^\]]*\])/);
+      text += `${list[i]} `;
+    }
 
-		for (let i = 0; i < x.length; i++) {
-			const s: HTMLSpanElement = document.createElement("span");
-			const isPart: boolean = (x[i].startsWith("[") && x[i].endsWith("]"))
+    text.trimEnd();
 
-			s.style.color = isPart ? pri : sec;
-			s.innerText = utilities.removeCharsFromString(x[i], ["[", "]"]);
+    return text;
+  }
 
-			environment.temp.append(s);
-		}
+  outputColor(text: string, pri = "var(--red)", lineBreak = true, sec = "") {
+    const x = text.split(/(\[[^\]]*\])/);
 
-		this.flushTempToBuffer();
-		//this.syncTarget();
+    for (let i = 0; i < x.length; i++) {
+      const s: HTMLSpanElement = document.createElement("span");
+      const isPart: boolean = x[i].startsWith("[") && x[i].endsWith("]");
 
-		this.output("", lineBreak);
-	}
+      s.style.color = isPart ? pri : sec;
+      s.innerHTML = utilities.removeCharsFromString(x[i], ["[", "]"]);
 
-	flushTempToBuffer() {
-		environment.instance.buffer = environment.temp.innerHTML;
+      environment.temp.append(s);
+    }
 
-		//this.syncTarget();
-	}
+    this.flushTempToBuffer();
 
-	flushBufferToTemp() {
-		environment.temp.innerHTML = environment.instance.buffer;
-	}
+    this.output("", lineBreak);
+  }
 
-	syncTarget() {
-		environment.instance.target.innerHTML = environment.instance.buffer;
-	}
+  flushTempToBuffer() {
+    kernel.log(`Flushing temp to buffer...`);
+    environment.instance.buffer = environment.temp.innerHTML;
+  }
+
+  flushBufferToTemp() {
+    kernel.log(`Flushing buffer to temp...`);
+    environment.temp.innerHTML = environment.instance.buffer;
+  }
+
+  syncTarget() {
+    kernel.log(`Syncing instance target with instance buffer...`);
+    environment.instance.target.innerHTML = environment.instance.buffer;
+  }
 }
 
 export const userInterface = new UserInterface();

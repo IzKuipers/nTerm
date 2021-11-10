@@ -1,3 +1,4 @@
+import { kernel } from "../kernel";
 import { environment } from "./env"
 import { variables } from "./vars";
 
@@ -33,7 +34,9 @@ export const Themes = new Map<string, Theme>(
 
 class ThemeHandler {
     async applyTheme(name: string) {
+        
         if (Themes.has(name)) {
+            kernel.log(`Applying theme "${name}"...`)
             environment.oldTheme = environment.CurrentTheme;
             environment.CurrentTheme = name;
 
@@ -55,6 +58,8 @@ class ThemeHandler {
     }
 
     async loadStoredTheme() {
+        kernel.log(`Loading stored theme from LocalStorage...`);
+
         const theme: string | null = localStorage.getItem("theme");
 
         await this.applyTheme(theme || environment.defaultTheme);

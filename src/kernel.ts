@@ -11,27 +11,24 @@ class Kernel {
 
       environment.kStartTime = new Date().getTime();
 
-      userInterface.inputFocusLoop();
-
-      keyboard.register();
-
-      themeHandler.loadStoredTheme();
-
-      this.log(`Setting environment.displayOutput to ${target}...`);
       const instance: Instance = {
-        target: document.getElementById("app")!,
-        buffer: "hello, world!",
+        target: target,
+        buffer: "",
+        id: Math.floor(Math.random() * 1000000)
       }
 
+      this.log(`Creating Instance #${instance.id}`);
+
       instanceHandler.loadInstance(instance);
+      
+      keyboard.register();
+      themeHandler.loadStoredTheme();
+      
+      userInterface.inputFocusLoop();
 
-      userInterface.output("asdf")
-      userInterface.syncTarget();
-
-      this.log("Started commands.intro");
       kernelFunctions.get("intro")?.execute();
 
-      this.log("Starting prompt loop...");
+      this.log("Starting prompt...");
       userInterface.prompt();
     }
   }
@@ -53,14 +50,18 @@ class Kernel {
   panic() {
     environment.kHalt = true;
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
-    environment.instance.target.innerText = environment.instance.buffer = "";
+    environment.instance.target.innerHTML = environment.instance.buffer = "";
 
     userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
 
+    console.log(environment.kLog);
+    let string = "";
+
     for (let i = 0; i < environment.kLog.length; i++) {
-      userInterface.output(environment.kLog[i])
-      userInterface.syncTarget();
+      string += `${environment.kLog[i]}\n`;
     }
+
+    userInterface.output(string);
 
     userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);
   }
@@ -68,7 +69,7 @@ class Kernel {
   log(message = "") {
     const time = new Date().getTime() - environment.kStartTime;
 
-    environment.kLog.push(`[${time}] ${message}\n`);
+    environment.kLog.push(`[${time}] ${message}`);
   }
 }
 
