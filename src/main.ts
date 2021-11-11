@@ -5,6 +5,5 @@ try {
   kernel.init(document.body);
 } catch (e) {
   kernel.panic();
-  console.log(typeof e);
   throw e;
 }

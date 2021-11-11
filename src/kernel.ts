@@ -54,7 +54,6 @@ class Kernel {
 
     userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
 
-    console.log(environment.kLog);
     let string = "";
 
     for (let i = 0; i < environment.kLog.length; i++) {

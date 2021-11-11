@@ -11,7 +11,7 @@ class GitHubIntergration {
         return json;
       })
       .catch(() => {
-        return {};
+        return this.defaultReturnValue;
       });
 
     return data;
@@ -27,7 +27,7 @@ class GitHubIntergration {
         return json;
       })
       .catch(() => {
-        return {};
+        return this.defaultReturnValue;
       });
 
     return data;
@@ -43,7 +43,7 @@ class GitHubIntergration {
         return json;
       })
       .catch(() => {
-        return {};
+        return this.defaultReturnValue;
       });
 
     return data;
@@ -59,10 +59,31 @@ class GitHubIntergration {
         return json;
       })
       .catch(() => {
-        return {};
+        return this.defaultReturnValue;
       });
 
     return data;
+  }
+
+  async getUserDetails(user: string) {
+    kernel.log(
+      `GitHub Intergration: getting details of user "${user}"...`
+    );
+
+    const data = await fetch(`https://api.github.com/users/${user}`)
+      .then((response) => response.json())
+      .then((json) => {
+        return json;
+      })
+      .catch(() => {
+        return this.defaultReturnValue;
+      });
+
+    return data;
+  }
+
+  defaultReturnValue = {
+    message: "Internet Connection couldn't be established", documentation_url: "none"
   }
 }
 

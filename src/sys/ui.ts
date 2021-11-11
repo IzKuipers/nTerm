@@ -38,7 +38,6 @@ class UserInterface {
         const span = document.createElement("span");
         span.innerText = environment.val;
         span.id = `UNFOCUSED ${environment.iId}`;
-        console.warn(environment.val);
 
         try {
           input.insertAdjacentElement("beforebegin", span);
@@ -100,9 +99,6 @@ class UserInterface {
     if (commands.has(command)) {
       environment.argv = value.slice(1);
       
-
-      console.log(environment.hist);
-
       kernel.log(
         `Executing command "${command}" (${commands.get(command)?.description})`
       );
@@ -111,6 +107,7 @@ class UserInterface {
         await commands.get(command)?.execute();
       } catch (e) {
         kernel.panic();
+        throw e;
       }
     } else {
       kernel.log(

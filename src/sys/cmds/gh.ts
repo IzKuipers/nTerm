@@ -76,7 +76,7 @@ const subCommandMap = new Map<string, () => void>([
         userInterface.output(`Git URL         : ${repo.html_url}.git\n`);
         userInterface.output(`Last Updated    : ${repo.updated_at}`);
       } else {
-        userInterface.error(`Unable to get repo information: GitHub API returned "${repo.message}"`);
+        userInterface.error(`Unable to get repo information: ${repo.message}`);
       }
     },
   ],
@@ -100,7 +100,7 @@ const subCommandMap = new Map<string, () => void>([
           );
         }
       } else {
-        userInterface.error(`Unable to get user information: GitHub API returned "${commits.message}"`);
+        userInterface.error(`Unable to get user information: ${commits.message}`);
       }
     },
   ],
@@ -127,7 +127,7 @@ const subCommandMap = new Map<string, () => void>([
             `Following     : ${userInfo.following || 0}\n`
         );
       } else {
-        userInterface.error(`Unable to get user information: GitHub API returned "${userInfo.message}"`);
+        userInterface.error(`Unable to get user information: ${userInfo.message}`);
       }
     },
   ],
