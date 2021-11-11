@@ -15,7 +15,7 @@ class Environment {
 
   // Readonly Strings
   readonly vendor: string = "TechWorldInc"; // Author
-  readonly pName: string = "NetCMD"; // Product Name
+  readonly pName: string = "nTerm"; // Product Name
   readonly pVer: string = "2.0"; // Product Version
   readonly defaultTheme: string = "default"; // Default Theme
   readonly prompt: string = `[${this.path}]\n$`; // Prompt String

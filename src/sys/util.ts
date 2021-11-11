@@ -36,7 +36,7 @@ class Utilities {
       separator += "-";
     }
 
-    return separator
+    return separator;
   }
 
   removeCharsFromString(text = "", chars: string[] = []) {
@@ -64,6 +64,29 @@ class Utilities {
       return str;
     }
     return parsedStr;
+  }
+
+  async fetchJSON(url: string) {
+    const data = await fetch(url)
+      .then((response) => response.json())
+      .then((json) => {
+        return json;
+      })
+      .catch(() => {
+        return {};
+      });
+
+    return data;
+  }
+
+  makeHTMLTagsURLSafe(str: string) {
+    let list: string[] = str.split("");
+
+    for (let i = 0; i < list.length; i++) {
+      list[i] = list[i] == "<" ? "&lt;" : list[i] == ">" ? "&gt;" : list[i];
+    }
+
+    return list.join("");
   }
 }
 

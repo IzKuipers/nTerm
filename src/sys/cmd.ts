@@ -1,4 +1,3 @@
-
 import { help } from "./cmds/help";
 import { clear } from "./cmds/clear";
 import { ver } from "./cmds/ver";
@@ -11,11 +10,12 @@ import { hist } from "./cmds/hist";
 import { repeat } from "./cmds/repeat";
 import { env } from "./cmds/env";
 import { theme } from "./cmds/theme";
+import { getjson } from "./cmds/getjson";
 
 export interface Command {
   execute: () => void;
   description?: string;
-  usage: string
+  usage: string;
 }
 
 export const commands = new Map<string, Command>([
@@ -29,6 +29,7 @@ export const commands = new Map<string, Command>([
   ["gh", gh],
   ["hist", hist],
   ["repeat", repeat],
-  ["env",env],
-  ["theme",theme]
+  ["env", env],
+  ["theme", theme],
+  ["getjson", getjson],
 ]);

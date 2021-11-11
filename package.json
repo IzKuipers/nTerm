@@ -11,6 +11,7 @@
     "vite": "^2.6.4"
   },
   "dependencies": {
+    "eslint": "^8.2.0",
     "sass": "^1.43.4"
   }
 }

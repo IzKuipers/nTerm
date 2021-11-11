@@ -10,7 +10,7 @@ class UserInterface {
     const text = varUtils.replaceVariables(str);
 
     const span = document.createElement("span");
-    span.innerHTML = `${text}${lineBreak ? "\n" : ""}`;
+    span.innerHTML = `${utilities.makeHTMLTagsURLSafe(text)}${lineBreak ? "\n" : ""}`;
 
     environment.temp.append(span);
 
@@ -37,7 +37,7 @@ class UserInterface {
 
         const span = document.createElement("span");
         span.innerText = environment.val;
-        span.id = "as";
+        span.id = `UNFOCUSED ${environment.iId}`;
         console.warn(environment.val);
 
         try {
@@ -94,10 +94,12 @@ class UserInterface {
     }
 
     environment.cmd = command;
+    
+    environment.hist.push(full);
 
     if (commands.has(command)) {
       environment.argv = value.slice(1);
-      environment.hist.push(full);
+      
 
       console.log(environment.hist);
 
@@ -164,7 +166,7 @@ class UserInterface {
       const isPart: boolean = x[i].startsWith("[") && x[i].endsWith("]");
 
       s.style.color = isPart ? pri : sec;
-      s.innerHTML = utilities.removeCharsFromString(x[i], ["[", "]"]);
+      s.innerText = utilities.makeHTMLTagsURLSafe(utilities.removeCharsFromString(x[i], ["[", "]"]));
 
       environment.temp.append(s);
     }
