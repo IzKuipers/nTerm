@@ -20,5 +20,5 @@ export const getjson: Command = {
       
   },
   description: "Fetch the JSON data of a page.",
-  usage: `FETCH "<url>"`,
+  usage: `GETJSON "<url>"`,
 };

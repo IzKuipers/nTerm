@@ -18,9 +18,18 @@ export const help: Command = {
       }
     } else {
       const cmdList = commands.entries();
+      let commandList = [];
 
       for (const cmd of cmdList) {
-        userInterface.outputColor(`[${cmd[0].toUpperCase().padEnd(10, " ")}]${cmd[1].description}`,`var(--blue)`);
+        commandList.push(cmd[0]);
+      }
+
+      commandList = commandList.sort();
+
+      for (let index in commandList) {
+        let cmd:Command = commands.get(commandList[index])!;
+
+        userInterface.outputColor(`[${commandList[index].toUpperCase().padEnd(10, " ")}]${cmd?.description}`,`var(--blue)`);
       }
     }
   },
