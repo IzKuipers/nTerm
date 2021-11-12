@@ -8,7 +8,7 @@ class VarUtils {
         for (let i = 0; i < list.length; i++) {
             if (list[i].startsWith("$")) {
                 const keyName = list[i].replace("$", "");
-                
+
                 if (variables.has(keyName)) {
                     const value = variables.get(keyName)?.value;
                     list[i] = value ?? list[i];

@@ -1,85 +1,30 @@
-import { kernel } from "../kernel";
-
 class GitHubIntergration {
   async getUserRepos(username: string) {
-    kernel.log(
-      `GitHub Intergration: getting repositories from user "${username}"...`
-    );
-    const data = await fetch(`https://api.github.com/users/${username}/repos`)
-      .then((response) => response.json())
-      .then((json) => {
-        return json;
-      })
-      .catch(() => {
-        return this.defaultReturnValue;
-      });
-
-    return data;
+    return await this.getFromAPI(`users/${username}/repos`);
   }
 
   async getOrgRepos(orgname: string) {
-    kernel.log(
-      `GitHub Intergration: getting repositories from organization "${orgname}"...`
-    );
-    const data = await fetch(`https://api.github.com/orgs/${orgname}/repos`)
-      .then((response) => response.json())
-      .then((json) => {
-        return json;
-      })
-      .catch(() => {
-        return this.defaultReturnValue;
-      });
-
-    return data;
+    return await this.getFromAPI(`orgs/${orgname}/repos`);
   }
 
   async getRepoDetails(repo: string) {
-    kernel.log(
-      `GitHub Intergration: getting details for repository "${repo}"...`
-    );
-    const data = await fetch(`https://api.github.com/repos/${repo}`)
-      .then((response) => response.json())
-      .then((json) => {
-        return json;
-      })
-      .catch(() => {
-        return this.defaultReturnValue;
-      });
-
-    return data;
+    return await this.getFromAPI(`repos/${repo}`);
   }
 
   async getCommits(repo: string) {
-    kernel.log(
-      `GitHub Intergration: getting commits from repository "${repo}"...`
-    );
-    const data = await fetch(`https://api.github.com/repos/${repo}/commits`)
-      .then((response) => response.json())
-      .then((json) => {
-        return json;
-      })
-      .catch(() => {
-        return this.defaultReturnValue;
-      });
-
-    return data;
+    return await this.getFromAPI(`repos/${repo}/commits`)
   }
 
   async getUserDetails(user: string) {
-    kernel.log(
-      `GitHub Intergration: getting details of user "${user}"...`
-    );
+    return await this.getFromAPI(`users/${user}`);
+  }
 
-    const data = await fetch(`https://api.github.com/users/${user}`)
-      .then((response) => response.json())
-      .then((json) => {
-        return json;
-      })
-      .catch(() => {
-        return this.defaultReturnValue;
-      });
+  async getFromAPI(prefix: string) {
+    return await this.fetchJson(`https://api.github.com/${prefix}`);
+  }
 
-    return data;
+  async fetchJson(url: string) {
+    return (await (await fetch(url)).json()) || this.defaultReturnValue;
   }
 
   defaultReturnValue = {

@@ -4,6 +4,7 @@ import { keyboard } from "./sys/kb";
 import { kernelFunctions } from "./sys/cf";
 import { themeHandler } from "./sys/themes";
 import { Instance, instanceHandler } from "./sys/instance";
+import { connectionChecker } from "./sys/ping";
 class Kernel {
   init(target: HTMLElement) {
     if (target) {
@@ -20,10 +21,11 @@ class Kernel {
       this.log(`Creating Instance #${instance.id}`);
 
       instanceHandler.loadInstance(instance);
-      
+
+      connectionChecker.start();
       keyboard.register();
       themeHandler.loadStoredTheme();
-      
+
       userInterface.inputFocusLoop();
 
       kernelFunctions.get("intro")?.execute();
@@ -49,6 +51,7 @@ class Kernel {
 
   panic() {
     environment.kHalt = true;
+    connectionChecker.stop();
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
     environment.instance.target.innerHTML = environment.instance.buffer = "";
 
