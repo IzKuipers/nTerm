@@ -11,6 +11,7 @@ import { repeat } from "./cmds/repeat";
 import { env } from "./cmds/env";
 import { theme } from "./cmds/theme";
 import { getjson } from "./cmds/getjson";
+import { net } from "./cmds/net";
 
 export interface Command {
   execute: () => void;
@@ -32,4 +33,5 @@ export const commands = new Map<string, Command>([
   ["env", env],
   ["theme", theme],
   ["getjson", getjson],
+  ["net", net]
 ]);
