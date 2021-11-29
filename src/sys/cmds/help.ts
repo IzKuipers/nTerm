@@ -1,12 +1,12 @@
 import { Command, commands } from "../cmd";
-import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const help: Command = {
-  execute: () => {
-    if (environment.argv.length > 0) {
-      const argv: string[] = environment.argv;
-      const requestedCommand: string = argv.join(" ").toLowerCase();
+  execute: (...argv) => {
+    console.log(argv);
+    const commandName = argv[0];
+    if (commandName) {
+      const requestedCommand: string = commandName;
 
       if (commands.has(requestedCommand)) {
         userInterface.output("");

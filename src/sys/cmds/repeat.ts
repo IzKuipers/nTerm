@@ -1,12 +1,12 @@
 import { Command } from "../cmd";
-import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const repeat: Command = {
-    execute: async () => {
-        const Regx: RegExpMatchArray | null = environment.val.match(/"(.*?)"/);
+    execute: async (...argv) => {
+        const argvString = argv.join();
+        const Regx: RegExpMatchArray | null = argvString.match(/"(.*?)"/);
         let text = "";
-        const amnt: number = parseInt(environment.argv[0]);
+        const amnt: number = parseInt(argv[0]);
 
         if (Regx && Regx.length > 1 && !!amnt) {
             text = Regx[1];

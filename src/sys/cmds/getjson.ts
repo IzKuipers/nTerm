@@ -1,11 +1,10 @@
 import { Command } from "../cmd";
-import { environment } from "../env";
 import { userInterface } from "../ui";
 import { utilities } from "../util";
 
 export const getjson: Command = {
-  execute: async () => {
-    const Regx = environment.val.match(/"(.*?)"/);
+  execute: async (argv) => {
+    const Regx = argv.match(/"(.*?)"/);
 
     if (Regx && Regx.length > 1) {
       const text = Regx[1];

@@ -24,11 +24,22 @@ class GitHubIntergration {
   }
 
   async fetchJson(url: string) {
-    return (await (await fetch(url)).json()) || this.defaultReturnValue;
+    let returnData = (await (await fetch(url)).json());
+    if (!returnData) {
+      return this.defaultReturnValue;
+    } else if (returnData?.message == "Server Error") {
+      return this.serverDownReturnValue;
+    } else {
+      return returnData;
+    }
   }
 
   defaultReturnValue = {
     message: "Internet Connection couldn't be established", documentation_url: "none"
+  }
+
+  serverDownReturnValue = {
+    message: "GitHub API offline!", documentation_url: "https://www.githubstatus.com/"
   }
 }
 

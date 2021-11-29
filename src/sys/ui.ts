@@ -104,7 +104,7 @@ class UserInterface {
       );
 
       try {
-        await commands.get(command)?.execute();
+        await commands.get(command)?.execute(...environment.argv);
       } catch (e) {
         kernel.panic();
         throw e;

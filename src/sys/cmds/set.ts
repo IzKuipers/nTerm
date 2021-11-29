@@ -4,9 +4,9 @@ import { userInterface } from "../ui";
 import { Variable, variables } from "../vars";
 
 export const set: Command = {
-  execute: () => {
-    if (environment.argv.length > 1) {
-      const name: string = environment.argv[0];
+  execute: (...argv) => {
+    if (argv.length > 1) {
+      const name: string = argv[0];
       const value: string | undefined = environment.val.match(/"(.*?)"/)?.[1];
   
       if (variables.has(name) && variables.get(name)?.readonly && value) {

@@ -5,9 +5,9 @@ import { userInterface } from "../ui";
 import { utilities } from "../util";
 
 export const gh: Command = {
-  execute: async () => {
-    if (environment.argv.length) {
-      const subCommand = environment.argv[0].toLowerCase();
+  execute: async (...argv) => {
+    if (argv.length) {
+      const subCommand = argv[0].toLowerCase();
 
       if (subCommandMap.has(subCommand)) {
         await subCommandMap.get(subCommand)?.();

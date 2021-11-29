@@ -1,10 +1,10 @@
 import { Command } from "../cmd";
-import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const echo: Command = {
-  execute: () => {
-    const Regx = environment.val.match(/"(.*?)"/);
+  execute: (...argv) => {
+    console.log(argv);
+    const Regx = argv.join("").match(/"(.*?)"/);
 
     if (Regx && Regx.length > 1) {
       const text = Regx[1];
