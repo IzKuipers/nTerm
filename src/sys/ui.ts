@@ -52,7 +52,7 @@ class UserInterface {
 
       kernel.log(`Started userInterface.prompt`);
 
-      this.outputColor(`\n${prompt}`, "var(--gray)", false);
+      this.outputColor(`\n${utilities.reset(prompt)}`, "var(--gray)", false);
 
       const input = document.createElement("input");
 
@@ -163,7 +163,7 @@ class UserInterface {
       const isPart: boolean = x[i].startsWith("[") && x[i].endsWith("]");
 
       s.style.color = isPart ? pri : sec;
-      s.innerText = utilities.makeHTMLTagsURLSafe(utilities.removeCharsFromString(x[i], ["[", "]"]));
+      s.innerText = utilities.reset(utilities.makeHTMLTagsURLSafe(utilities.removeCharsFromString(x[i], ["[", "]"])));
 
       environment.temp.append(s);
     }
