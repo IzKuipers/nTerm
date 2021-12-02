@@ -28,6 +28,12 @@ export const Themes = new Map<string, Theme>(
             name: "Nord",
             author: "Arctic Ice Studio",
             className: "color-scheme-nord"
+        }],
+        ["onedark", {
+            path: async () => import("../themes/onedark.scss"),
+            name:"One Dark Pro",
+            author:"Atom",
+            className: "color-scheme-onedark"
         }]
     ]
 )
