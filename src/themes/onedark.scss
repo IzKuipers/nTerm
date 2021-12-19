@@ -1,5 +1,7 @@
-.color-scheme-onedark *,
-.color-scheme-onedark {
+div.instanceDiv.color-scheme-onedark *,
+div.instanceDiv.color-scheme-onedark,
+body.color-scheme-onedark,
+body.color-scheme-onedark * {
   --bg: #282C34;
   --fg: #ABB2BF;
   --red: #E06C75;

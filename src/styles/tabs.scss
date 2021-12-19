@@ -1,0 +1,79 @@
+div#tabs {
+  height: 37.5px;
+  background-color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+div#tabs div.instanceTab {
+  height: 21px;
+  max-height: 50px;
+  background-color: #0003;
+  display: inline-block;
+  min-width: 75px;
+  padding: 2.5px;
+  padding-left: 10px;
+  padding-top: 4px;
+  margin: 4px 5px;
+  border-radius: 2.5px;
+  position: relative;
+  transition: background-color 0.2s, opacity 0.3s;
+  font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
+    "Lucida Sans Typewriter", "Lucida Console", monaco,
+    "Bitstream Vera Sans Mono", monospace;
+}
+
+div#tabs div.instanceTab.selected {
+  background-color: #fff1;
+}
+
+div#tabs div.instanceTab:not(.selected) {
+  opacity: 0.3;
+}
+
+div.instanceDiv.hidden {
+  display: none;
+}
+
+div.instanceDiv {
+  border-top: var(--gray) 2px solid;
+}
+
+div.instanceTab span.close {
+  font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
+    "Lucida Sans Typewriter", "Lucida Console", monaco,
+    "Bitstream Vera Sans Mono", monospace;
+
+  position: absolute;
+  right: 10px;
+  top: 3px;
+}
+
+div.createButton {
+  height: 23.5px;
+  width: 27.5px;
+  max-height: 50px;
+  background-color: #fff1;
+  display: inline-block;
+  margin: 4px 5px;
+  margin-top: 1.5px;
+  border-radius: 2.5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
+    "Lucida Sans Typewriter", "Lucida Console", monaco,
+    "Bitstream Vera Sans Mono", monospace;
+  padding-top: 4px;
+}
+
+div.instanceTab:hover,
+div.createButton:hover {
+  background-color: #fff2 !important;
+  opacity: 1;
+  transition: background-color 0.2s, opacity 0.3s;
+}
+
+div.tabHolder::-webkit-scrollbar {
+  display: none;
+}

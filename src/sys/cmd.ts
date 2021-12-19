@@ -12,10 +12,10 @@ import { env } from "./cmds/env";
 import { theme } from "./cmds/theme";
 import { getjson } from "./cmds/getjson";
 import { net } from "./cmds/net";
-import {rnd} from "./cmds/rnd";
+import { rnd } from "./cmds/rnd";
 
 export interface Command {
-  execute: (...argv:string[]) => void;
+  execute: (...argv: string[]) => void;
   description?: string;
   usage: string;
 }
@@ -35,5 +35,5 @@ export const commands = new Map<string, Command>([
   ["theme", theme],
   ["getjson", getjson],
   ["net", net],
-  ["rnd",rnd]
+  ["rnd", rnd],
 ]);

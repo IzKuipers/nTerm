@@ -12,7 +12,7 @@ class GitHubIntergration {
   }
 
   async getCommits(repo: string) {
-    return await this.getFromAPI(`repos/${repo}/commits`)
+    return await this.getFromAPI(`repos/${repo}/commits`);
   }
 
   async getUserDetails(user: string) {
@@ -24,7 +24,7 @@ class GitHubIntergration {
   }
 
   async fetchJson(url: string) {
-    let returnData = (await (await fetch(url)).json());
+    let returnData = await (await fetch(url)).json();
     if (!returnData) {
       return this.defaultReturnValue;
     } else if (returnData?.message == "Server Error") {
@@ -35,12 +35,14 @@ class GitHubIntergration {
   }
 
   defaultReturnValue = {
-    message: "Internet Connection couldn't be established", documentation_url: "none"
-  }
+    message: "Internet Connection couldn't be established",
+    documentation_url: "none",
+  };
 
   serverDownReturnValue = {
-    message: "GitHub API offline!", documentation_url: "https://www.githubstatus.com/"
-  }
+    message: "GitHub API offline!",
+    documentation_url: "https://www.githubstatus.com/",
+  };
 }
 
 export const GHIntergration = new GitHubIntergration();

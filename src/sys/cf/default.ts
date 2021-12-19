@@ -7,9 +7,10 @@ export const dfault: CoreFunction = {
   execute: () => {
     kernel.log("Start Core Function 'default'");
 
-    userInterface.error(``,false);
+    userInterface.error(``, false);
 
-    userInterface.output(`${environment.cmd}: command not found`);
-
+    userInterface.output(
+      `${environment.currentInstance.env.cmd}: command not found`
+    );
   },
 };

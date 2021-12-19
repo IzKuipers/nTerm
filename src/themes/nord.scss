@@ -1,5 +1,7 @@
-.color-scheme-nord *,
-.color-scheme-nord {
+div.instanceDiv.color-scheme-nord *,
+div.instanceDiv.color-scheme-nord,
+body.color-scheme-nord,
+body.color-scheme-nord * {
   --bg: rgb(46, 52, 64);
   --fg: rgb(216, 222, 233);
   --red: #bf616a;
@@ -10,7 +12,9 @@
   --aqua: #8fbcbb;
   --gray: rgb(109, 109, 109);
   --orange: #d0a770;
-  --body-padding: .2em;
+  --body-padding: 0.2em;
   --font-size: 16px;
-  --font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo, "Lucida Sans Typewriter", "Lucida Console", monaco, "Bitstream Vera Sans Mono", monospace;
+  --font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
+    "Lucida Sans Typewriter", "Lucida Console", monaco,
+    "Bitstream Vera Sans Mono", monospace;
 }

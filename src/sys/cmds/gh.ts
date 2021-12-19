@@ -26,7 +26,7 @@ const subCommandMap = new Map<string, () => void>([
   [
     "userrepo",
     async () => {
-      const subSubCommand = environment.argv[1];
+      const subSubCommand = environment.currentInstance.env.argv[1];
       const repos = await GHIntergration.getUserRepos(subSubCommand);
 
       for (let i = 0; i < repos.length; i++) {
@@ -46,7 +46,7 @@ const subCommandMap = new Map<string, () => void>([
   [
     "orgrepo",
     async () => {
-      const subSubCommand = environment.argv[1];
+      const subSubCommand = environment.currentInstance.env.argv[1];
       const repos = await GHIntergration.getOrgRepos(subSubCommand);
       for (let i = 0; i < repos.length; i++) {
         userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
@@ -57,14 +57,16 @@ const subCommandMap = new Map<string, () => void>([
         }
       }
       if (!repos.length) {
-        userInterface.error(`Organization has no repos or organization not found!`);
+        userInterface.error(
+          `Organization has no repos or organization not found!`
+        );
       }
     },
   ],
   [
     "repo",
     async () => {
-      const subSubCommand = environment.argv[1];
+      const subSubCommand = environment.currentInstance.env.argv[1];
       const repo = await GHIntergration.getRepoDetails(subSubCommand);
       if (!repo.message && !repo.documentation_url) {
         userInterface.output(`Owner           : ${repo.owner.login}`);
@@ -83,7 +85,7 @@ const subCommandMap = new Map<string, () => void>([
   [
     "commits",
     async () => {
-      const subSubCommand = environment.argv[1];
+      const subSubCommand = environment.currentInstance.env.argv[1];
       const commits = await GHIntergration.getCommits(subSubCommand);
 
       if (!commits.message && !commits.documentation_url) {
@@ -100,18 +102,23 @@ const subCommandMap = new Map<string, () => void>([
           );
         }
       } else {
-        userInterface.error(`Unable to get user information: ${commits.message}`);
+        userInterface.error(
+          `Unable to get user information: ${commits.message}`
+        );
       }
     },
   ],
   [
     "user",
     async () => {
-      const subSubCommand = environment.argv[1];
+      const subSubCommand = environment.currentInstance.env.argv[1];
       const userInfo = await GHIntergration.getUserDetails(subSubCommand);
 
       if (!userInfo.message && !userInfo.documentation_url) {
-        userInterface.outputColor(`Fetching user information of [${subSubCommand}] . . .`,`var(--blue)`);
+        userInterface.outputColor(
+          `Fetching user information of [${subSubCommand}] . . .`,
+          `var(--blue)`
+        );
         userInterface.output(
           `GitHub Name   : ${userInfo.login || "Unknown"}\n` +
             `Full Name     : ${userInfo.name || "Not specified"}\n` +
@@ -121,13 +128,17 @@ const subCommandMap = new Map<string, () => void>([
             }\n` +
             `Website       : ${userInfo.blog || "No website specified"}\n` +
             `Email         : ${userInfo.email || "No email specified"}\n` +
-            `URL           : ${userInfo.html_url || "Unable to fetch URL"}\n\n` +
+            `URL           : ${
+              userInfo.html_url || "Unable to fetch URL"
+            }\n\n` +
             `Location      : ${userInfo.location || "Not specified"}\n` +
             `Followers     : ${userInfo.followers || 0}\n` +
             `Following     : ${userInfo.following || 0}\n`
         );
       } else {
-        userInterface.error(`Unable to get user information: ${userInfo.message}`);
+        userInterface.error(
+          `Unable to get user information: ${userInfo.message}`
+        );
       }
     },
   ],

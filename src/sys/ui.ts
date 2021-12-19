@@ -7,12 +7,16 @@ import { utilities } from "./util";
 
 class UserInterface {
   output(str: string, lineBreak = true) {
+    this.flushBufferToTemp();
     const text = varUtils.replaceVariables(str);
 
     const span = document.createElement("span");
-    span.innerHTML = `${utilities.makeHTMLTagsURLSafe(text)}${lineBreak ? "\n" : ""}`;
+    span.innerHTML = `${utilities.makeHTMLTagsURLSafe(text)}${
+      lineBreak ? "\n" : ""
+    }`;
 
-    environment.temp.append(span);
+    if (environment.currentInstance)
+      environment.currentInstance.env.temp.append(span);
 
     this.flushTempToBuffer();
 
@@ -28,16 +32,18 @@ class UserInterface {
       kernel.log(`Started userInterface.prompt`);
       const prompt = this.getPrompt();
 
-      if (environment.iId) {
-        kernel.log(`Unfocused input ${environment.iId}`);
+      if (environment.currentInstance.iId) {
+        kernel.log(`Unfocused input ${environment.currentInstance.iId}`);
 
         const input = document.getElementById(
-          environment.iId
-        ) as HTMLInputElement;
+          `${environment.currentInstance.iId}`
+        )! as HTMLInputElement;
 
         const span = document.createElement("span");
-        span.innerText = environment.val;
-        span.id = `UNFOCUSED ${environment.iId}`;
+        span.innerText = `${
+          environment.currentInstance.env.cmd
+        } ${environment.currentInstance.env.argv.join(" ")!}`;
+        span.id = `UNFOCUSED ${environment.currentInstance.iId}`;
 
         try {
           input.insertAdjacentElement("beforebegin", span);
@@ -45,7 +51,8 @@ class UserInterface {
           input.remove();
         } catch {}
 
-        environment.instance.buffer = environment.instance.target.innerHTML;
+        environment.currentInstance.buffer =
+          environment.currentInstance.target.innerHTML;
       }
 
       this.flushBufferToTemp();
@@ -57,12 +64,14 @@ class UserInterface {
       const input = document.createElement("input");
 
       input.className = "input";
-      input.id = `#${Math.floor(Math.random() * 999999999)}`;
+      input.id = `${environment.currentInstance.id}#${Math.floor(
+        Math.random() * 999999999
+      )}`;
       input.style.width = `calc(100% - ${prompt.length}em)`;
       input.spellcheck = false;
 
-      environment.iId = input.id;
-      environment.temp.append(input);
+      environment.currentInstance.iId = input.id;
+      environment.currentInstance.env.temp.append(input);
 
       this.flushTempToBuffer();
 
@@ -74,7 +83,7 @@ class UserInterface {
     kernel.log(`Started userInterface.evaluateCommand`);
 
     const input: HTMLInputElement = document.getElementById(
-      environment.iId
+      environment.currentInstance.iId
     ) as HTMLInputElement;
 
     let value: string[];
@@ -83,7 +92,7 @@ class UserInterface {
 
     if (!override) {
       full = input.value;
-      environment.val = input?.value;
+      environment.currentInstance.env.val = input?.value;
       value = input?.value.split(" ");
       command = value[0].toLowerCase();
     } else {
@@ -92,19 +101,23 @@ class UserInterface {
       command = value[0].toLowerCase();
     }
 
-    environment.cmd = command;
-    
-    environment.hist.push(full);
+    environment.currentInstance.env.cmd = command;
 
-    if (commands.has(command)) {
-      environment.argv = value.slice(1);
-      
+    if (environment.currentInstance.env)
+      environment.currentInstance.env.hist.push(full);
+
+    if (commands.has(command) && environment.currentInstance.env) {
+      environment.currentInstance.env.argv = value.slice(1);
+
       kernel.log(
         `Executing command "${command}" (${commands.get(command)?.description})`
       );
 
       try {
-        await commands.get(command)?.execute(...environment.argv);
+        if (environment.currentInstance.env)
+          await commands
+            .get(command)
+            ?.execute(...environment.currentInstance.env.argv);
       } catch (e) {
         kernel.panic();
         throw e;
@@ -114,28 +127,47 @@ class UserInterface {
         `Execution of command "${command}" failed: no such definition`
       );
 
-      (document.getElementById(environment.iId)! as HTMLInputElement).value =
-        full;
+      (
+        document.getElementById(
+          environment.currentInstance.iId
+        )! as HTMLInputElement
+      ).value = full;
       if (command) kernelFunctions.get("default")?.execute();
     }
 
-    if (!noPrompt) this.prompt();
+    if (!noPrompt) {
+      this.prompt();
+
+      document.getElementById(environment.currentInstance.iId)!.focus();
+    }
   }
 
   inputFocusLoop() {
-    const ival = setInterval(() => {
-      const input = document.getElementById(environment.iId);
+    function event(e: MouseEvent) {
+      const path = e.composedPath();
 
-      if (input) input.focus();
-      if (environment.kHalt) clearInterval(ival);
-    }, 50);
+      const input = document.getElementById(environment.currentInstance.iId)!;
+
+      if (
+        path.includes(
+          document.getElementById(`${environment.currentInstance.id}`)!
+        )
+      ) {
+        input.focus();
+
+        if (environment.kHalt) document.removeEventListener("mousedown", event);
+      }
+
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }
+
+    document.addEventListener("click", event);
   }
 
   getPrompt() {
     let text = "";
-    const list = (
-      variables.get(environment.promptVarName)?.value || environment.prompt
-    ).split(" ");
+    const list = (variables.get("PS")?.value || environment.prompt).split(" ");
 
     for (let i = 0; i < list.length; i++) {
       if (list[i].startsWith("$")) {
@@ -163,9 +195,14 @@ class UserInterface {
       const isPart: boolean = x[i].startsWith("[") && x[i].endsWith("]");
 
       s.style.color = isPart ? pri : sec;
-      s.innerText = utilities.reset(utilities.makeHTMLTagsURLSafe(utilities.removeCharsFromString(x[i], ["[", "]"])));
+      s.innerText = utilities.reset(
+        utilities.makeHTMLTagsURLSafe(
+          utilities.removeCharsFromString(x[i], ["[", "]"])
+        )
+      );
 
-      environment.temp.append(s);
+      if (environment.currentInstance)
+        environment.currentInstance.env.temp.append(s);
     }
 
     this.flushTempToBuffer();
@@ -175,17 +212,23 @@ class UserInterface {
 
   flushTempToBuffer() {
     kernel.log(`Flushing temp to buffer...`);
-    environment.instance.buffer = environment.temp.innerHTML;
+    if (environment.currentInstance)
+      environment.currentInstance.buffer =
+        environment.currentInstance.env.temp.innerHTML;
   }
 
   flushBufferToTemp() {
     kernel.log(`Flushing buffer to temp...`);
-    environment.temp.innerHTML = environment.instance.buffer;
+    if (environment.currentInstance)
+      environment.currentInstance.env.temp.innerHTML =
+        environment.currentInstance.buffer;
   }
 
   syncTarget() {
     kernel.log(`Syncing instance target with instance buffer...`);
-    environment.instance.target.innerHTML = environment.instance.buffer;
+    if (environment.currentInstance)
+      environment.currentInstance.target.innerHTML =
+        environment.currentInstance.buffer;
   }
 }
 

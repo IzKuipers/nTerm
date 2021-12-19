@@ -8,28 +8,31 @@ export const set: Command = {
   execute: (...argv) => {
     if (argv.length > 1) {
       const name: string = argv[0];
-      const value: string | undefined = utilities.reset(environment.val.match(/"(.*?)"/)?.[1] || "");
-  
+      const value: string | undefined = utilities.reset(
+        environment.currentInstance.env.val!.match(/"(.*?)"/)?.[1] || ""
+      );
+
       if (variables.has(name) && variables.get(name)?.readonly && value) {
-        userInterface.error(``,false);
+        userInterface.error(``, false);
         userInterface.output(`Cannot set readonly variable "${name}".`);
       } else {
         const variable: Variable = {
           value: utilities.reset(value || ""),
-          readonly: false
-        }
-  
+          readonly: false,
+        };
+
         variables.set(name, variable);
-  
-        userInterface.outputColor(`Variable [${name}] set to [${value}].`,`var(--blue)`);
+
+        userInterface.outputColor(
+          `Variable [${name}] set to [${value}].`,
+          `var(--blue)`
+        );
       }
     } else {
       userInterface.error(`missing arguments: type "HELP SET" for usage`);
     }
-    
-
   },
 
   description: "Set a variable to a given string",
-  usage: `SET <name> "<value>"`
+  usage: `SET <name> "<value>"`,
 };

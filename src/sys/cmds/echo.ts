@@ -3,7 +3,6 @@ import { userInterface } from "../ui";
 
 export const echo: Command = {
   execute: (...argv) => {
-    console.log(argv);
     const Regx = argv.join("").match(/"(.*?)"/);
 
     if (Regx && Regx.length > 1) {
@@ -16,5 +15,5 @@ export const echo: Command = {
   },
 
   description: "Echo back the given text",
-  usage: `ECHO "<string>"`
+  usage: `ECHO "<string>"`,
 };

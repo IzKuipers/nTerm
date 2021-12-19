@@ -1,38 +1,19 @@
 import { Instance } from "./instance";
 
 class Environment {
-  // HTML Elements
-  temp: HTMLElement = document.getElementById('tmp')!;
+  kStartTime = 0;
 
-  // Writable strings
-  iId = ""; // Input ID
-  cmd = ""; // Command
-  val = ""; // Input value
-  path = "/" // Current Path
-  promptVarName = "PS"
-  CurrentTheme = "";
-  oldTheme = "";
+  kHalt = false;
 
-  // Readonly Strings
-  readonly vendor: string = "TechWorldInc"; // Author
-  readonly pName: string = "nTerm"; // Product Name
-  readonly pVer: string = "2.0"; // Product Version
-  readonly defaultTheme: string = "default"; // Default Theme
-  readonly prompt: string = `[${this.path}]\n$`; // Prompt String
+  currentInstance!: Instance;
 
-  // String Arrays
-  hist: string[] = []; // History List
-  kLog: string[] = []; // Kernel Log
-  argv: string[] = []; // Argv list
+  instances = new Map<string, Instance>();
 
-  // Integers
-  kStartTime = 0; // Kernel Start Time
-
-  // Bools
-  kHalt = false; // Kernel Halt
-
-  // Instance
-  instance!: Instance;
+  readonly vendor: string = "TechWorldInc";
+  readonly pName: string = "nTerm";
+  readonly pVer: string = "2.0";
+  readonly defaultTheme: string = "default";
+  readonly prompt: string = `[/]\n$`;
 }
 
 export const environment = new Environment();

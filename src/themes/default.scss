@@ -1,5 +1,7 @@
-.color-scheme-default *,
-.color-scheme-default {
+div.instanceDiv.color-scheme-default *,
+div.instanceDiv.color-scheme-default,
+body.color-scheme-default,
+body.color-scheme-default * {
   --bg: #000;
   --fg: #fff;
   --red: #f00;
@@ -10,7 +12,7 @@
   --aqua: #afa;
   --gray: #444;
   --orange: #ff7b00;
-  --body-padding: .5em;
+  --body-padding: 0.5em;
   --font-size: 14px;
   --font-family: monospace;
 }

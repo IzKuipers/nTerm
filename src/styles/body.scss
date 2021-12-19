@@ -1,6 +1,6 @@
 /*Fallback theme*/
-body,
-body * {
+div.instanceDiv,
+div.instanceDiv * {
   --bg: #000;
   --fg: #fff;
   --red: #fff;
@@ -21,7 +21,7 @@ html {
   margin: 0;
 }
 
-body {
+div.instanceDiv {
   width: calc(100% - calc(var(--body-padding) * 2));
   height: calc(100% - calc(var(--body-padding) * 2));
   margin: 0px;
@@ -30,4 +30,14 @@ body {
   font-family: var(--font-family);
   background-color: var(--bg);
   color: var(--fg);
+  height:calc(100vh - 37.5px - calc(var(--body-padding) * 2));
+}
+
+body {
+  background-color: var(--bg);
+  height:100%;
+  color:white;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding:0;
+  margin:0;
 }

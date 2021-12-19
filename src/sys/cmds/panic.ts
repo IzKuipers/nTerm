@@ -7,5 +7,5 @@ export const panic: Command = {
   },
 
   description: "Cause a kernel panic",
-  usage: "PANIC"
+  usage: "PANIC",
 };

@@ -11,12 +11,14 @@ export const getjson: Command = {
 
       const json = await utilities.fetchJSON(text);
       for (const key in json) {
-        userInterface.outputColor(`[  ${key.padEnd(40, ' ')}]: ${json[key]}`,`var(--yellow)`)
+        userInterface.outputColor(
+          `[  ${key.padEnd(40, " ")}]: ${json[key]}`,
+          `var(--yellow)`
+        );
       }
     } else {
       userInterface.error("Unable to echo: syntax invalid!");
     }
-      
   },
   description: "Fetch the JSON data of a page.",
   usage: `GETJSON "<url>"`,

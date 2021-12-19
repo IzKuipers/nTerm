@@ -91,14 +91,14 @@ class Utilities {
 
   reset(str: string) {
     const replacers = [
-      ["\\n","\n"],
-      ["&gt;",">"],
-      ["&lt;","<"]
-    ]
+      ["\\n", "\n"],
+      ["&gt;", ">"],
+      ["&lt;", "<"],
+    ];
     let repl = str;
 
     for (const i in replacers) {
-      repl = repl.replace(i[0],i[1]);
+      repl = repl.replace(i[0], i[1]);
     }
 
     return str.replace("\\n", "\n").replace("&lt;", "<").replace("&gt;", ">");

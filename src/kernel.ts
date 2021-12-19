@@ -15,10 +15,33 @@ class Kernel {
       const instance: Instance = {
         target: target,
         buffer: "",
-        id: Math.floor(Math.random() * 1000000)
-      }
+        id: parseInt(target.id),
+        iId: "",
+        env: {
+          hist: [],
+          kLog: [],
+          argv: [],
+          temp: document.getElementById("tmp")!,
+
+          // Writable strings
+          cmd: "", // Command
+          val: "", // Input value
+          path: "/", // Current Path
+          CurrentTheme: "",
+          oldTheme: "",
+        },
+      };
 
       this.log(`Creating Instance #${instance.id}`);
+
+      const temp = document.createElement("noscript");
+
+      temp.id = `temp#${instance.id}`;
+
+      document.body.append(temp);
+
+      if (environment.currentInstance)
+        environment.currentInstance.env.temp = temp;
 
       instanceHandler.loadInstance(instance);
 
@@ -38,29 +61,38 @@ class Kernel {
   setIntervals() {
     setInterval(() => {
       if (environment.kHalt) {
-        document.getElementById(environment.iId)?.setAttribute("disabled", "true");
+        if (environment.currentInstance)
+          document
+            .getElementById(environment.currentInstance.iId)
+            ?.setAttribute("disabled", "true");
       }
 
       window.onerror = console.error = () => {
         this.panic();
-      }
+      };
 
-      document.addEventListener("error", () => { this.panic() })
-    }, 50)
+      document.addEventListener("error", () => {
+        this.panic();
+      });
+    }, 50);
   }
 
   panic() {
     environment.kHalt = true;
     connectionChecker.stop();
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
-    environment.instance.target.innerHTML = environment.instance.buffer = "";
+    if (environment.currentInstance)
+      environment.currentInstance.target.innerHTML =
+        environment.currentInstance.buffer = "";
 
     userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
 
     let string = "";
 
-    for (let i = 0; i < environment.kLog.length; i++) {
-      string += `${environment.kLog[i]}\n`;
+    if (environment.currentInstance) {
+      for (let i = 0; i < environment.currentInstance.env.kLog.length; i++) {
+        string += `${environment.currentInstance.env.kLog[i]}\n`;
+      }
     }
 
     userInterface.output(string);
@@ -71,7 +103,9 @@ class Kernel {
   log(message = "") {
     const time = new Date().getTime() - environment.kStartTime;
 
-    environment.kLog.push(`[${time}] ${message}`);
+    if (environment.currentInstance) {
+      environment.currentInstance.env.kLog.push(`[${time}] ${message}`);
+    }
   }
 }
 
