@@ -19,7 +19,7 @@ export const gh: Command = {
     }
   },
   description: "View information about GitHub repositories",
-  usage: "GH <userrepo|orgrepo|repo|commits> <user/repo|user|org>",
+  usage: "GH <userrepo|orgrepo|repo|commits|user> <user/repo|user|org>",
 };
 
 const subCommandMap = new Map<string, () => void>([
@@ -116,7 +116,7 @@ const subCommandMap = new Map<string, () => void>([
 
       if (!userInfo.message && !userInfo.documentation_url) {
         userInterface.outputColor(
-          `Fetching user information of [${subSubCommand}] . . .`,
+          `Fetching user information of [${subSubCommand}]...`,
           `var(--blue)`
         );
         userInterface.output(

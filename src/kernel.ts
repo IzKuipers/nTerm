@@ -45,7 +45,7 @@ class Kernel {
 
       instanceHandler.loadInstance(instance);
 
-      connectionChecker.start();
+      //connectionChecker.start();
       keyboard.register();
       themeHandler.loadStoredTheme();
 
@@ -98,6 +98,11 @@ class Kernel {
     userInterface.output(string);
 
     userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);
+
+    setTimeout(() => {
+      environment.currentInstance.target.scrollTop =
+        environment.currentInstance.target.scrollHeight;
+    }, 1000);
   }
 
   log(message = "") {

@@ -8,8 +8,8 @@ export const getjson: Command = {
 
     if (Regx && Regx.length > 1) {
       const text = Regx[1];
-
       const json = await utilities.fetchJSON(text);
+
       for (const key in json) {
         userInterface.outputColor(
           `[  ${key.padEnd(40, " ")}]: ${json[key]}`,

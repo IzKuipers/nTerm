@@ -1,3 +1,4 @@
+import { kernel } from "../kernel";
 import { environment } from "./env";
 import { userInterface } from "./ui";
 
@@ -7,6 +8,7 @@ class ConnectionChecker {
   defaultDelay: number = 1000;
 
   start(delay = this.defaultDelay) {
+    kernel.log(`Starting Ping listener...`);
     this.interval = setInterval(() => {
       if (!this.get() && !environment.kHalt) {
         this.stop();
@@ -15,6 +17,8 @@ class ConnectionChecker {
   }
 
   stop() {
+    kernel.log(`Stopping Ping listener...`);
+
     try {
       environment.currentInstance.env.temp.innerHTML = "";
     } catch {}

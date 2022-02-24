@@ -8,9 +8,10 @@ import { utilities } from "./util";
 class UserInterface {
   output(str: string, lineBreak = true) {
     this.flushBufferToTemp();
-    const text = varUtils.replaceVariables(str);
 
+    const text = varUtils.replaceVariables(str);
     const span = document.createElement("span");
+
     span.innerHTML = `${utilities.makeHTMLTagsURLSafe(text)}${
       lineBreak ? "\n" : ""
     }`;
@@ -19,7 +20,6 @@ class UserInterface {
       environment.currentInstance.env.temp.append(span);
 
     this.flushTempToBuffer();
-
     this.syncTarget();
   }
 
@@ -30,6 +30,7 @@ class UserInterface {
   prompt() {
     if (!environment.kHalt) {
       kernel.log(`Started userInterface.prompt`);
+
       const prompt = this.getPrompt();
 
       if (environment.currentInstance.iId) {
@@ -40,9 +41,11 @@ class UserInterface {
         )! as HTMLInputElement;
 
         const span = document.createElement("span");
+
         span.innerText = `${
           environment.currentInstance.env.cmd
         } ${environment.currentInstance.env.argv.join(" ")!}`;
+
         span.id = `UNFOCUSED ${environment.currentInstance.iId}`;
 
         try {
@@ -67,6 +70,7 @@ class UserInterface {
       input.id = `${environment.currentInstance.id}#${Math.floor(
         Math.random() * 999999999
       )}`;
+
       input.style.width = `calc(100% - ${prompt.length}em)`;
       input.spellcheck = false;
 
@@ -81,6 +85,8 @@ class UserInterface {
 
   async evaluateCommand(override?: string, noPrompt?: boolean) {
     kernel.log(`Started userInterface.evaluateCommand`);
+
+    environment.currentInstance.env.argv = [];
 
     const input: HTMLInputElement = document.getElementById(
       environment.currentInstance.iId
@@ -114,12 +120,14 @@ class UserInterface {
       );
 
       try {
-        if (environment.currentInstance.env)
+        if (environment.currentInstance.env) {
           await commands
             .get(command)
             ?.execute(...environment.currentInstance.env.argv);
+        }
       } catch (e) {
         kernel.panic();
+
         throw e;
       }
     } else {
@@ -132,6 +140,7 @@ class UserInterface {
           environment.currentInstance.iId
         )! as HTMLInputElement
       ).value = full;
+
       if (command) kernelFunctions.get("default")?.execute();
     }
 
@@ -144,8 +153,8 @@ class UserInterface {
 
   inputFocusLoop() {
     function event(e: MouseEvent) {
+      
       const path = e.composedPath();
-
       const input = document.getElementById(environment.currentInstance.iId)!;
 
       if (
@@ -206,12 +215,12 @@ class UserInterface {
     }
 
     this.flushTempToBuffer();
-
     this.output("", lineBreak);
   }
 
   flushTempToBuffer() {
     kernel.log(`Flushing temp to buffer...`);
+
     if (environment.currentInstance)
       environment.currentInstance.buffer =
         environment.currentInstance.env.temp.innerHTML;
@@ -219,6 +228,7 @@ class UserInterface {
 
   flushBufferToTemp() {
     kernel.log(`Flushing buffer to temp...`);
+
     if (environment.currentInstance)
       environment.currentInstance.env.temp.innerHTML =
         environment.currentInstance.buffer;
@@ -226,6 +236,7 @@ class UserInterface {
 
   syncTarget() {
     kernel.log(`Syncing instance target with instance buffer...`);
+    
     if (environment.currentInstance)
       environment.currentInstance.target.innerHTML =
         environment.currentInstance.buffer;

@@ -27,17 +27,21 @@ export interface InstanceEnv {
 
 class InstanceHandler {
   loadInstance(instance: Instance) {
-    kernel.log(`Loading instance #${instance.id} . . .`);
+    kernel.log(`Loading instance #${instance.id}...`);
+    
     if (instance?.target) {
       environment.instances.set(instance?.id.toString(), instance);
 
       this.switchInstance(instance);
+
       return;
     }
   }
 
   switchInstance(instance: Instance) {
     if (instance) {
+      kernel.log(`Switching to instance #${instance.id}...`);
+
       environment.currentInstance = instance;
       environment.currentInstance.env.temp = document.getElementById(
         `temp#${instance?.id}`

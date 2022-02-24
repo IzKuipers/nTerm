@@ -8,11 +8,12 @@ export const env: Command = {
 
     for (let key of keys) {
       userInterface.outputColor(
-        `${variables.get(key)?.readonly ? "@ " : "  "}` +
+        `${variables.get(key)?.readonly ? "# " : "  "}` +
           `[${key.padEnd(25, " ")}]`,
         `var(--blue)`,
         false
       );
+
       userInterface.output(
         `: ${variables.get(key)?.value.replace(/\n/g, "\\n")}`
       );

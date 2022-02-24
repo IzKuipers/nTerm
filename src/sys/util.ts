@@ -41,6 +41,7 @@ class Utilities {
 
   removeCharsFromString(text = "", chars: string[] = []) {
     kernel.log(`Started Utilities.removeCharsFromString`);
+
     const list = text.split("");
 
     for (let i = 0; i < list.length; i++) {
@@ -54,6 +55,7 @@ class Utilities {
 
   unescapeSlashes(str: string) {
     kernel.log(`Started Utilities.unescapeSlashes`);
+    
     let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
 
     parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");
@@ -63,6 +65,7 @@ class Utilities {
     } catch (e) {
       return str;
     }
+    
     return parsedStr;
   }
 
@@ -95,6 +98,7 @@ class Utilities {
       ["&gt;", ">"],
       ["&lt;", "<"],
     ];
+    
     let repl = str;
 
     for (const i in replacers) {

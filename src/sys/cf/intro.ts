@@ -11,11 +11,13 @@ export const intro: CoreFunction = {
       `[█] Welcome to [${environment.pName}]!`,
       "var(--purple)"
     );
+
     userInterface.outputColor("[█]", "var(--blue)");
     userInterface.outputColor(
       `[█] You are on instance #[${environment.currentInstance.id}]`,
       "var(--aqua)"
     );
+    
     userInterface.outputColor("[█]", "var(--green)");
     userInterface.outputColor(
       `[█] Current theme is [${
@@ -23,6 +25,7 @@ export const intro: CoreFunction = {
       }].`,
       "var(--yellow)"
     );
+    
     userInterface.outputColor("[█]", "var(--orange)");
     userInterface.outputColor(
       "[█] You can type [help] for a list of commands.",

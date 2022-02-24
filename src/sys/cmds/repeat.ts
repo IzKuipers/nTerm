@@ -9,9 +9,9 @@ export const repeat: Command = {
     const amnt: number = parseInt(argv[0]);
 
     if (Regx && Regx.length > 1 && !!amnt) {
-      text = Regx[1];
+      text = Regx[1].split(",").join(" ");
 
-      userInterface.output(`Repeating "${text}" ${amnt} times...\n`);
+      //userInterface.output(`Repeating "${text}" ${amnt} times...\n`);
 
       for (let i = 0; i < amnt; i++) {
         await userInterface.evaluateCommand(text, true);

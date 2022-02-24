@@ -6,6 +6,7 @@ export const hist: Command = {
   execute: () => {
     if (!environment.currentInstance.env.hist.length) {
       userInterface.output("The history list is empty!");
+      
       return;
     }
 

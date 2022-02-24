@@ -6,5 +6,6 @@ try {
   TabManagement.init();
 } catch (e) {
   kernel.panic();
+  
   throw e;
 }

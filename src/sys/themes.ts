@@ -52,6 +52,7 @@ class ThemeHandler {
   async applyTheme(name: string) {
     if (Themes.has(name)) {
       kernel.log(`Applying theme "${name}"...`);
+
       environment.currentInstance.env.oldTheme =
         environment.currentInstance.env.CurrentTheme;
       environment.currentInstance.env.CurrentTheme = name;
@@ -67,6 +68,7 @@ class ThemeHandler {
           Themes.get(environment.currentInstance.env.oldTheme!)?.className ||
             `color-scheme-${environment.defaultTheme}`
         );
+      
         instance.classList.add(
           Themes.get(name)?.className ||
             `color-scheme-${environment.defaultTheme}`
@@ -76,6 +78,7 @@ class ThemeHandler {
           Themes.get(environment.currentInstance.env.oldTheme!)?.className ||
             `color-scheme-${environment.defaultTheme}`
         );
+      
         document.body.classList.add(
           Themes.get(name)?.className ||
             `color-scheme-${environment.defaultTheme}`

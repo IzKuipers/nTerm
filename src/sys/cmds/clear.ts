@@ -5,6 +5,7 @@ import { userInterface } from "../ui";
 export const clear: Command = {
   execute: () => {
     environment.currentInstance.env.temp.innerHTML = "";
+    
     userInterface.flushTempToBuffer();
     userInterface.syncTarget();
   },

@@ -8,6 +8,7 @@ export const net: Command = {
         "[SUCCESS]: you are connected to the internet",
         `var(--green)`
       );
+      
       return;
     }
 

@@ -1,7 +1,9 @@
+import { kernel } from "../kernel";
 import { environment } from "./env";
 
 class VarUtils {
   replaceVariables(input: string) {
+    kernel.log(`Started VarUtils.replaceVariables...`);
     let text = "";
     const list = input.split(" ");
 
