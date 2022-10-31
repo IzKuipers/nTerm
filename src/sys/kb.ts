@@ -17,12 +17,12 @@ class Keyboard {
         e.stopPropagation();
         e.stopImmediatePropagation();
         break;
+      /* 
+      TODO: add these
       case "arrowup":
-        console.log("arrowup");
         break;
       case "arrowdown":
-        console.log("arrowdown");
-        break;
+        break; */
     }
   }
 }

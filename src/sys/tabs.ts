@@ -14,7 +14,9 @@ class TM {
     const txt = document.createElement("text");
     const ids = Math.floor(Math.random() * 32768);
 
-    kernel.log(`Started TabManagement.createNewTab: creating new tab with id #${ids}...`);
+    kernel.log(
+      `Started TabManagement.createNewTab: creating new tab with id #${ids}...`
+    );
 
     tab.className = "instanceTab";
     div.className = "instanceDiv";
@@ -52,37 +54,43 @@ class TM {
   }
 
   switchTab(instanceTab: HTMLDivElement, instanceDiv: HTMLDivElement) {
-    kernel.log(`TabManagement.switchTab: switching to tab #${(instanceTab.children[0] as HTMLSpanElement).innerText}...`);
+    const id = (instanceTab.children[0] as HTMLSpanElement).innerText;
     const instanceDivs = document.querySelectorAll("div.instanceDiv");
     const instanceTabs = document.querySelectorAll("div.instanceTab");
 
+    kernel.log(`TabManagement.switchTab: switching to tab #${id}...`);
+
     for (let i = 0; i < instanceDivs.length; i++) {
-      const instance = instanceDivs[i] as HTMLDivElement;
+      const instanceNode = instanceDivs[i] as HTMLDivElement;
 
-      if (instance == instanceDiv) {
-        instance.classList.remove("hidden");
-
-        instanceHandler.switchInstance(environment.instances.get(instance.id)!);
-      } else {
-        instance.classList.add("hidden");
+      if (instanceNode != instanceDiv) {
+        instanceNode.classList.add("hidden");
+        continue;
       }
+
+      instanceNode.classList.remove("hidden");
+
+      const instance = environment.instances.get(instanceNode.id);
+
+      if (instance) instanceHandler.switchInstance(instance);
     }
 
     for (let i = 0; i < instanceTabs.length; i++) {
       const tab = instanceTabs[i] as HTMLDivElement;
 
-      if (tab == instanceTab) {
-        tab.classList.add("selected");
-      } else {
+      if (tab != instanceTab) {
         tab.classList.remove("selected");
+        continue;
       }
+
+      tab.classList.add("selected");
     }
 
-    try {
-      document.getElementById(environment.currentInstance.iId)!.focus();
-    } catch {}
+    const currentInstanceNode = document.getElementById(
+      environment.currentInstance.iId
+    );
 
-    console.dir(environment.currentInstance)
+    if (currentInstanceNode) currentInstanceNode.focus();
   }
 
   closeTab(id: number) {
@@ -90,7 +98,7 @@ class TM {
 
     let counter = 0;
     const tabs = document.querySelector("div#tabs")?.children;
-    
+
     for (let instance of environment.instances) {
       if (instance[1].id == id) {
         environment.instances.delete(instance[0]);

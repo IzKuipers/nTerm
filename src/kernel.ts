@@ -60,56 +60,66 @@ class Kernel {
 
   setIntervals() {
     setInterval(() => {
-      if (environment.kHalt) {
-        if (environment.currentInstance)
-          document
-            .getElementById(environment.currentInstance.iId)
-            ?.setAttribute("disabled", "true");
+      const instance = environment.currentInstance;
+
+      if (environment.kHalt && instance) {
+        const instanceNode = document.getElementById(instance.iId);
+
+        if (instanceNode) instanceNode.setAttribute("disabled", "true");
       }
-
-      window.onerror = console.error = () => {
-        this.panic();
-      };
-
-      document.addEventListener("error", () => {
-        this.panic();
-      });
     }, 50);
+
+    window.onerror = console.error = kernel.panic;
+
+    document.addEventListener("error", kernel.panic);
   }
 
   panic() {
     environment.kHalt = true;
+
     connectionChecker.stop();
+
     this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
-    if (environment.currentInstance)
-      environment.currentInstance.target.innerHTML =
-        environment.currentInstance.buffer = "";
+
+    if (environment.currentInstance) {
+      const instance = environment.currentInstance;
+      const target = instance.target;
+
+      instance.buffer = "";
+      target.innerText = "";
+    }
 
     userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
 
     let string = "";
 
     if (environment.currentInstance) {
-      for (let i = 0; i < environment.currentInstance.env.kLog.length; i++) {
-        string += `${environment.currentInstance.env.kLog[i]}\n`;
+      const kernelLog = environment.currentInstance.env.kLog;
+
+      for (let i = 0; i < kernelLog.length; i++) {
+        string += `${kernelLog[i]}\n`;
       }
     }
 
     userInterface.output(string);
-
     userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);
 
     setTimeout(() => {
-      environment.currentInstance.target.scrollTop =
-        environment.currentInstance.target.scrollHeight;
+      const target = environment.currentInstance.target;
+
+      if (!target) return;
+
+      target.scrollTop = target.scrollHeight;
     }, 1000);
   }
 
   log(message = "") {
     const time = new Date().getTime() - environment.kStartTime;
 
-    if (environment.currentInstance) {
-      environment.currentInstance.env.kLog.push(`[${time}] ${message}`);
+    const instance = environment.currentInstance;
+
+    if (instance) {
+      instance.env.kLog.push(`[${time}] ${message}`);
     }
   }
 }

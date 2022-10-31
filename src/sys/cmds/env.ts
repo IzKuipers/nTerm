@@ -7,9 +7,19 @@ export const env: Command = {
     let keys = variables.keys();
 
     for (let key of keys) {
+      const value = variables.get(key);
+      const kyStr = key.padEnd(25, " ");
+
+      if (!value)
+        return userInterface.outputColor(
+          "[Error]: variable fetch failed.",
+          "var(--red)"
+        );
+
+      const roStr = value.readonly ? "# " : "  ";
+
       userInterface.outputColor(
-        `${variables.get(key)?.readonly ? "# " : "  "}` +
-          `[${key.padEnd(25, " ")}]`,
+        `${roStr}` + `[${kyStr}]`,
         `var(--blue)`,
         false
       );

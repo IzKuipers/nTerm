@@ -6,17 +6,17 @@ import { utilities } from "../util";
 
 export const gh: Command = {
   execute: async (...argv) => {
-    if (argv.length) {
-      const subCommand = argv[0].toLowerCase();
+    if (!argv.length)
+      return userInterface.error(
+        `No sub-command specified! Type "HELP GH" for help`
+      );
 
-      if (subCommandMap.has(subCommand)) {
-        await subCommandMap.get(subCommand)?.();
-      } else {
-        userInterface.error(`"${subCommand}" is not a valid sub-command!`);
-      }
-    } else {
-      userInterface.error(`No sub-command specified! Type "HELP GH" for help`);
-    }
+    const subCommand = argv[0].toLowerCase();
+
+    if (!subCommandMap.has(subCommand))
+      return userInterface.error(`"${subCommand}" is not a valid sub-command!`);
+
+    await subCommandMap.get(subCommand)?.();
   },
   description: "View information about GitHub repositories",
   usage: "GH <userrepo|orgrepo|repo|commits|user> <user/repo|user|org>",
@@ -26,20 +26,21 @@ const subCommandMap = new Map<string, () => void>([
   [
     "userrepo",
     async () => {
-      const subSubCommand = environment.currentInstance.env.argv[1];
+      const argv = environment.currentInstance.env.argv;
+      const subSubCommand = argv[1];
       const repos = await GHIntergration.getUserRepos(subSubCommand);
+
+      if (!repos.length)
+        return userInterface.error(`User has no repos or user not found!`);
 
       for (let i = 0; i < repos.length; i++) {
         userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
+
         if (repos[i].description) {
           userInterface.output(repos[i].description);
         } else {
           userInterface.outputColor("[Description Not Found]", `var(--gray)`);
         }
-      }
-
-      if (!repos.length) {
-        userInterface.error(`User has no repos or user not found!`);
       }
     },
   ],
@@ -48,18 +49,21 @@ const subCommandMap = new Map<string, () => void>([
     async () => {
       const subSubCommand = environment.currentInstance.env.argv[1];
       const repos = await GHIntergration.getOrgRepos(subSubCommand);
-      for (let i = 0; i < repos.length; i++) {
-        userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
-        if (repos[i].description) {
-          userInterface.output(repos[i].description);
-        } else {
-          userInterface.outputColor("[Description Not Found]", `var(--gray)`);
-        }
-      }
-      if (!repos.length) {
-        userInterface.error(
+
+      if (!repos.length)
+        return userInterface.error(
           `Organization has no repos or organization not found!`
         );
+
+      for (let i = 0; i < repos.length; i++) {
+        userInterface.output(`${repos[i].name.padEnd(35, " ")}: `, false);
+
+        if (!repos[i].description) {
+          userInterface.outputColor("[Description Not Found]", `var(--gray)`);
+          continue;
+        }
+
+        userInterface.output(repos[i].description);
       }
     },
   ],
@@ -68,15 +72,23 @@ const subCommandMap = new Map<string, () => void>([
     async () => {
       const subSubCommand = environment.currentInstance.env.argv[1];
       const repo = await GHIntergration.getRepoDetails(subSubCommand);
+      const owner = repo.owner.login;
+      const name = repo.full_name;
+      const desc = repo.description || "No description";
+      const url = repo.html_url;
+      const gurl = `${repo.html.url}.git`;
+      const upat = repo.updated_at;
+
+      if (repo.message) {
+      }
+
       if (!repo.message && !repo.documentation_url) {
-        userInterface.output(`Owner           : ${repo.owner.login}`);
-        userInterface.output(`Full Name       : ${repo.full_name}`);
-        userInterface.output(
-          `Description     : ${repo.description || "Description Not Found"}\n`
-        );
-        userInterface.output(`URL             : ${repo.html_url}`);
-        userInterface.output(`Git URL         : ${repo.html_url}.git\n`);
-        userInterface.output(`Last Updated    : ${repo.updated_at}`);
+        userInterface.output(`Owner           : ${owner}`);
+        userInterface.output(`Full Name       : ${name}`);
+        userInterface.output(`Description     : ${desc}\n`);
+        userInterface.output(`URL             : ${url}`);
+        userInterface.output(`Git URL         : ${gurl}.git\n`);
+        userInterface.output(`Last Updated    : ${upat}`);
       } else {
         userInterface.error(`Unable to get repo information: ${repo.message}`);
       }
