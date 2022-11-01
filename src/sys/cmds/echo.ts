@@ -3,7 +3,7 @@ import { userInterface } from "../ui";
 
 export const echo: Command = {
   execute: (...argv) => {
-    const Regx = argv.join("").match(/"(.*?)"/);
+    const Regx = argv.join(" ").match(/"(.*?)"/);
 
     if (Regx && Regx.length > 1) {
       const text = Regx[1];

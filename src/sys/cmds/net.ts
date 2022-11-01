@@ -25,7 +25,7 @@ function ping() {
   try {
     const req = new XMLHttpRequest();
 
-    req.open("GET", "https://techworldinc.tk/ping/ping.html", false);
+    req.open("GET", "https://izaakdev.tk/ping/ping.html", false);
     req.send(null);
 
     return !!req.responseText.startsWith("pong");

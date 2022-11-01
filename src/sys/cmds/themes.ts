@@ -1,7 +1,7 @@
 import { environment } from "./../env";
 import { userInterface } from "./../ui";
 import { Command } from "../cmd";
-import { Themes } from "../themes";
+import { Themes } from "../themes/store";
 
 export const themes: Command = {
   execute() {

@@ -1,0 +1,18 @@
+div.instanceDiv.color-scheme-monokai *,
+div.instanceDiv.color-scheme-monokai,
+body.color-scheme-monokai,
+body.color-scheme-monokai * {
+  --bg: #272822;
+  --fg: #F8F8F2;
+  --red: #F92672;
+  --green: #A6E22E;
+  --yellow: #E6DB74;
+  --blue: #66D9EF;
+  --purple: #AE81FF;
+  --aqua: #21c7a8;
+  --gray: #75715E;
+  --orange: #FFB458;
+  --body-padding: .6em;
+  --font-size: 16px;
+  --font-family: "Source Code Pro", monospace;
+}

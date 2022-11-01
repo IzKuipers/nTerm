@@ -26,5 +26,6 @@ export const colors: Command = {
       );
     }
   },
-  usage: "Display all colors",
+  description: "Display all colors",
+  usage: "COLORS",
 };

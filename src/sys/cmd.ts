@@ -16,6 +16,7 @@ import { net } from "./cmds/net";
 import { rnd } from "./cmds/rnd";
 import { instance } from "./cmds/instance";
 import { colors } from "./cmds/colors";
+import { intro } from "./cmds/intro";
 
 export interface Command {
   execute: (...argv: string[]) => void;
@@ -42,4 +43,5 @@ export const commands = new Map<string, Command>([
   ["rnd", rnd],
   ["instance", instance],
   ["colors", colors],
+  ["intro", intro],
 ]);

@@ -49,8 +49,6 @@ class UserInterface {
 
     this.flushTempToBuffer();
     this.output("");
-
-    setTimeout(() => {}, 100);
   }
 
   unloadOldPrompt(iId: string, instance: Instance): Instance {

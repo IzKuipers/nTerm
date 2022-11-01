@@ -1,52 +1,7 @@
 import { kernel } from "../kernel";
 import { environment } from "./env";
+import { Themes } from "./themes/store";
 import { variables } from "./vars";
-
-export interface Theme {
-  path: () => void;
-  name: string;
-  author: string;
-  className: string;
-}
-
-export const Themes = new Map<string, Theme>([
-  [
-    environment.defaultTheme,
-    {
-      path: async () => import("../themes/default.scss"),
-      name: environment.defaultTheme,
-      author: environment.vendor,
-      className: "color-scheme-default",
-    },
-  ],
-  [
-    "gruvbox",
-    {
-      path: async () => import("../themes/gruvbox.scss"),
-      name: "Gruvbox Dark",
-      author: "github/morhertz",
-      className: "color-scheme-gruvbox",
-    },
-  ],
-  [
-    "nord",
-    {
-      path: async () => import("../themes/nord.scss"),
-      name: "Nord",
-      author: "Arctic Ice Studio",
-      className: "color-scheme-nord",
-    },
-  ],
-  [
-    "onedark",
-    {
-      path: async () => import("../themes/onedark.scss"),
-      name: "One Dark Pro",
-      author: "Atom",
-      className: "color-scheme-onedark",
-    },
-  ],
-]);
 
 class ThemeHandler {
   async applyTheme(name: string) {
@@ -81,10 +36,8 @@ class ThemeHandler {
         instance.classList.remove(oldCName);
         document.body.classList.remove(oldCName);
 
-        setTimeout(() => {
-          document.body.classList.add(newCName);
-          instance.classList.add(newCName);
-        }, 100);
+        document.body.classList.add(newCName);
+        instance.classList.add(newCName);
 
         environment.currentInstance = ins;
       }

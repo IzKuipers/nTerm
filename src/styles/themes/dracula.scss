@@ -1,0 +1,18 @@
+div.instanceDiv.color-scheme-dracula *,
+div.instanceDiv.color-scheme-dracula,
+body.color-scheme-dracula,
+body.color-scheme-dracula * {
+  --bg: #282a36;
+  --fg: #a4a4a1;
+  --red: #ff5555;
+  --green: #50fa7b;
+  --yellow: #f1fa8c;
+  --blue: #9693f9;
+  --purple: #bd93f9;
+  --aqua: #8BE9FD;
+  --gray: #555;
+  --orange: #ffb86c;
+  --body-padding: .4em;
+  --font-size: 16px;
+  --font-family: "Source Code Pro", monospace;
+}
