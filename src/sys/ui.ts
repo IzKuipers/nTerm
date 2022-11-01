@@ -4,6 +4,7 @@ import { commands } from "./cmd";
 import { kernelFunctions } from "./cf";
 import { variables, varUtils } from "./vars";
 import { utilities } from "./util";
+import { Instance } from "./instance";
 
 class UserInterface {
   output(str: string, lineBreak = true) {
@@ -28,69 +29,75 @@ class UserInterface {
   }
 
   prompt() {
-    if (!environment.kHalt) {
-      kernel.log(`Started userInterface.prompt`);
+    if (environment.kHalt) return;
 
-      const prompt = this.getPrompt();
+    kernel.log(`Started userInterface.prompt`);
 
-      if (environment.currentInstance.iId) {
-        kernel.log(`Unfocused input ${environment.currentInstance.iId}`);
+    const prompt = this.getPrompt();
+    const iId = environment.currentInstance.iId;
 
-        const input = document.getElementById(
-          `${environment.currentInstance.iId}`
-        )! as HTMLInputElement;
+    let instance = environment.currentInstance;
 
-        const span = document.createElement("span");
+    if (!instance) return;
 
-        span.innerText = `${
-          environment.currentInstance.env.cmd
-        } ${environment.currentInstance.env.argv.join(" ")!}`;
+    if (iId) instance = this.unloadOldPrompt(iId, instance);
 
-        span.id = `UNFOCUSED ${environment.currentInstance.iId}`;
+    this.flushBufferToTemp();
+    this.outputColor(`\n${utilities.reset(prompt)}`, "var(--green)", false);
 
-        try {
-          input.insertAdjacentElement("beforebegin", span);
+    environment.currentInstance = this.createNewPrompt(instance, prompt);
 
-          input.remove();
-        } catch {}
+    this.flushTempToBuffer();
+    this.output("");
 
-        environment.currentInstance.buffer =
-          environment.currentInstance.target.innerHTML;
-      }
+    setTimeout(() => {}, 100);
+  }
 
-      this.flushBufferToTemp();
+  unloadOldPrompt(iId: string, instance: Instance): Instance {
+    kernel.log(`Unfocused input ${iId}`);
 
-      kernel.log(`Started userInterface.prompt`);
+    const input = document.getElementById(iId)! as HTMLInputElement;
+    const span = document.createElement("span");
 
-      this.outputColor(`\n${utilities.reset(prompt)}`, "var(--gray)", false);
+    span.innerText = `${instance.env.cmd} ${instance.env.argv.join(" ")!}`;
+    span.id = `UNFOCUSED ${iId}`;
 
-      const input = document.createElement("input");
+    try {
+      input.insertAdjacentElement("beforebegin", span);
 
-      input.className = "input";
-      input.id = `${environment.currentInstance.id}#${Math.floor(
-        Math.random() * 999999999
-      )}`;
+      input.remove();
+    } catch {}
 
-      input.style.width = `calc(100% - ${prompt.length}em)`;
-      input.spellcheck = false;
+    instance.buffer = instance.target.innerHTML;
 
-      environment.currentInstance.iId = input.id;
-      environment.currentInstance.env.temp.append(input);
+    return instance;
+  }
 
-      this.flushTempToBuffer();
+  createNewPrompt(instance: Instance, prompt: string): Instance {
+    const input = document.createElement("input");
 
-      this.output("");
-    }
+    instance.env.argv = [];
+
+    input.className = "input";
+    input.id = `${instance.id}#${Math.floor(Math.random() * 999999999)}`;
+
+    input.style.width = `calc(100% - ${prompt.length}em)`;
+    input.spellcheck = false;
+
+    instance.iId = input.id;
+    instance.env.temp.append(input);
+
+    return instance;
   }
 
   async evaluateCommand(override?: string, noPrompt?: boolean) {
     kernel.log(`Started userInterface.evaluateCommand`);
 
-    environment.currentInstance.env.argv = [];
+    const instance = environment.currentInstance;
+    const iId = instance.iId;
+    const input = document.getElementById(iId) as HTMLInputElement;
 
-    const input: HTMLInputElement = document.getElementById(
-      environment.currentInstance.iId
-    ) as HTMLInputElement;
+    instance.env.argv = [];
 
     let value: string[];
     let command: string;
@@ -98,7 +105,7 @@ class UserInterface {
 
     if (!override) {
       full = input.value;
-      environment.currentInstance.env.val = input?.value;
+      instance.env.val = input?.value;
       value = input?.value.split(" ");
       command = value[0].toLowerCase();
     } else {
@@ -107,39 +114,32 @@ class UserInterface {
       command = value[0].toLowerCase();
     }
 
-    environment.currentInstance.env.cmd = command;
+    instance.env.cmd = command;
 
-    if (environment.currentInstance.env)
-      environment.currentInstance.env.hist.push(full);
+    if (instance.env) instance.env.hist.push(full);
 
-    if (commands.has(command) && environment.currentInstance.env) {
-      environment.currentInstance.env.argv = value.slice(1);
+    if (commands.has(command) && instance.env) {
+      const cmd = commands.get(command);
 
-      kernel.log(
-        `Executing command "${command}" (${commands.get(command)?.description})`
-      );
+      if (cmd) {
+        instance.env.argv = value.slice(1);
 
-      try {
-        if (environment.currentInstance.env) {
-          await commands
-            .get(command)
-            ?.execute(...environment.currentInstance.env.argv);
+        kernel.log(`Executing command "${command}" (${cmd.description})`);
+
+        try {
+          if (instance.env) await cmd.execute(...instance.env.argv);
+        } catch (e) {
+          kernel.panic();
+
+          throw e;
         }
-      } catch (e) {
-        kernel.panic();
-
-        throw e;
       }
     } else {
       kernel.log(
         `Execution of command "${command}" failed: no such definition`
       );
 
-      (
-        document.getElementById(
-          environment.currentInstance.iId
-        )! as HTMLInputElement
-      ).value = full;
+      input.value = full;
 
       if (command) kernelFunctions.get("default")?.execute();
     }
@@ -147,22 +147,23 @@ class UserInterface {
     if (!noPrompt) {
       this.prompt();
 
-      document.getElementById(environment.currentInstance.iId)!.focus();
+      userInterface.focusInput();
     }
+
+    environment.currentInstance = instance;
   }
 
   inputFocusLoop() {
     function event(e: MouseEvent) {
-      
       const path = e.composedPath();
-      const input = document.getElementById(environment.currentInstance.iId)!;
+      const instanceNode = document.getElementById(
+        `${environment.currentInstance.id}`
+      );
 
-      if (
-        path.includes(
-          document.getElementById(`${environment.currentInstance.id}`)!
-        )
-      ) {
-        input.focus();
+      if (!instanceNode) return;
+
+      if (path.includes(instanceNode)) {
+        userInterface.focusInput();
 
         if (environment.kHalt) document.removeEventListener("mousedown", event);
       }
@@ -172,6 +173,15 @@ class UserInterface {
     }
 
     document.addEventListener("click", event);
+  }
+
+  focusInput() {
+    const instance = environment.currentInstance;
+    const input = document.getElementById(instance.iId);
+
+    if (!input || !instance) return;
+
+    input.focus();
   }
 
   getPrompt() {
@@ -184,6 +194,7 @@ class UserInterface {
 
         if (variables.has(keyName)) {
           const value = variables.get(keyName)?.value;
+
           list[i] = value ?? list[i];
         }
       }
@@ -236,7 +247,7 @@ class UserInterface {
 
   syncTarget() {
     kernel.log(`Syncing instance target with instance buffer...`);
-    
+
     if (environment.currentInstance)
       environment.currentInstance.target.innerHTML =
         environment.currentInstance.buffer;

@@ -53,50 +53,55 @@ class ThemeHandler {
     if (Themes.has(name)) {
       kernel.log(`Applying theme "${name}"...`);
 
-      environment.currentInstance.env.oldTheme =
-        environment.currentInstance.env.CurrentTheme;
-      environment.currentInstance.env.CurrentTheme = name;
+      const ins = environment.currentInstance;
+      const env = ins.env;
+      const def = `color-scheme-${environment.defaultTheme}`;
+      const oldCName = Themes.get(env.oldTheme!)?.className || def;
+      const newCName = Themes.get(name)?.className || def;
 
-      await Themes.get(name)?.path();
+      env.oldTheme = env.CurrentTheme;
+      env.CurrentTheme = name;
 
       const instances = document.querySelectorAll("div.instanceDiv");
 
       for (let i = 0; i < instances.length; i++) {
         const instance = instances[i] as HTMLDivElement;
 
-        instance.classList.remove(
-          Themes.get(environment.currentInstance.env.oldTheme!)?.className ||
-            `color-scheme-${environment.defaultTheme}`
-        );
-      
-        instance.classList.add(
-          Themes.get(name)?.className ||
-            `color-scheme-${environment.defaultTheme}`
-        );
+        const classList = instances[i].classList;
 
-        document.body.classList.remove(
-          Themes.get(environment.currentInstance.env.oldTheme!)?.className ||
-            `color-scheme-${environment.defaultTheme}`
-        );
-      
-        document.body.classList.add(
-          Themes.get(name)?.className ||
-            `color-scheme-${environment.defaultTheme}`
-        );
+        for (let j = 0; j < classList.length; j++) {
+          const className = classList[j];
+
+          if (className.includes("color-scheme-")) {
+            classList.remove(className);
+            document.body.classList.remove(className);
+          }
+        }
+
+        instance.classList.remove(oldCName);
+        document.body.classList.remove(oldCName);
+
+        setTimeout(() => {
+          document.body.classList.add(newCName);
+          instance.classList.add(newCName);
+        }, 100);
+
+        environment.currentInstance = ins;
       }
 
-      localStorage.setItem(
-        "theme",
-        environment.currentInstance.env.CurrentTheme
-      );
+      localStorage.setItem("theme", env.CurrentTheme as string);
 
       variables.set("THEME", {
         value: name,
         readonly: true,
       });
 
+      ins.env = env;
+      environment.currentInstance = ins;
+
       return true;
     }
+
     return false;
   }
 

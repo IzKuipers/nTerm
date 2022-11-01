@@ -24,19 +24,21 @@ class TM {
     div.id = `${ids}`;
     tab.id = `tab#${ids}`;
 
-    cbt.innerText = "x";
+    cbt.innerText = "close";
     cbt.className = "close";
 
     txt.innerText = `${ids}`;
 
     cbt.addEventListener("click", (e) => {
       this.closeTab(ids);
+
       e.stopPropagation();
       e.stopImmediatePropagation();
     });
 
     tab.addEventListener("click", (e) => {
       this.switchTab(tab, div);
+
       e.stopPropagation();
       e.stopImmediatePropagation();
     });
@@ -65,6 +67,7 @@ class TM {
 
       if (instanceNode != instanceDiv) {
         instanceNode.classList.add("hidden");
+
         continue;
       }
 
@@ -80,6 +83,7 @@ class TM {
 
       if (tab != instanceTab) {
         tab.classList.remove("selected");
+
         continue;
       }
 
@@ -97,6 +101,7 @@ class TM {
     kernel.log(`Started TabManagement.closeTab: closing tab #${id}`);
 
     let counter = 0;
+
     const tabs = document.querySelector("div#tabs")?.children;
 
     for (let instance of environment.instances) {
@@ -128,6 +133,7 @@ class TM {
 
   init() {
     kernel.log(`Started TabManagement.init: initializing Tab interface...`);
+
     const tabHolder = document.createElement("div");
     const createButton = document.createElement("div");
     const tabSpan = document.createElement("div");

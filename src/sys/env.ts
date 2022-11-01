@@ -9,11 +9,11 @@ class Environment {
 
   instances = new Map<string, Instance>();
 
-  readonly vendor: string = "TechWorldInc";
+  readonly vendor: string = "Izaak Kuipers";
   readonly pName: string = "nTerm";
-  readonly pVer: string = "2.0";
-  readonly defaultTheme: string = "default";
-  readonly prompt: string = `[/]\n$`;
+  readonly pVer: string = "2.1";
+  readonly defaultTheme: string = "onedark";
+  readonly prompt: string = `[${location.hostname}]@[${this.pName}]: $`;
 }
 
 export const environment = new Environment();

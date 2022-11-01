@@ -4,7 +4,7 @@ import { kernel } from "../../kernel";
 import { environment } from "../env";
 
 export const dfault: CoreFunction = {
-  execute: () => {
+  execute() {
     kernel.log("Start Core Function 'default'");
 
     userInterface.error(``, false);

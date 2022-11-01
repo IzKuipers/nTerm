@@ -3,7 +3,7 @@ import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const ver: Command = {
-  execute: () => {
+  execute() {
     userInterface.output(
       `${environment.pName} version ${environment.pVer}. Created by ${environment.vendor}`
     );

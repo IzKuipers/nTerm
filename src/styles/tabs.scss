@@ -1,34 +1,29 @@
 div#tabs {
-  height: 37.5px;
+  height: 40px;
   background-color: transparent;
   display: inline-block;
   vertical-align: middle;
+  padding:0;
 }
 
 div#tabs div.instanceTab {
-  height: 21px;
-  max-height: 50px;
-  background-color: #0003;
+  height: 40px;
+  line-height: 30px;
+  max-height: 40px;
+  border-right: #0006 1px solid;
   display: inline-block;
   min-width: 75px;
-  padding: 2.5px;
-  padding-left: 10px;
-  padding-top: 4px;
-  margin:    5px;
-  border-radius: 2.5px;
+  padding: 5px 15px;
+  padding-right: 40px;
+  border-radius: 0;
   position: relative;
   transition: background-color 0.2s, opacity 0.3s;
-  font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
-    "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Source Code Pro", monospace;
+  box-sizing: border-box;
 }
 
 div#tabs div.instanceTab.selected {
-  background-color: #fff1;
-}
-
-div#tabs div.instanceTab:not(.selected) {
-  opacity: 0.3;
+  background-color: #ffffff13;
 }
 
 div.instanceDiv.hidden {
@@ -40,31 +35,31 @@ div.instanceDiv {
 }
 
 div.instanceTab span.close {
-  font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
-    "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
-
+  font-family: "Material Icons";
+  font-size: 18px;
   position: absolute;
   right: 10px;
-  top: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
 }
 
 div.createButton {
-  height: 23.5px;
-  width: 27.5px;
-  max-height: 50px;
-  background-color: #fff1;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+    background-color: #fff1;
   display: inline-block;
-  margin: 4px 5px;
-  margin-top: 1.5px;
   border-radius: 2.5px;
   position: relative;
   text-align: center;
   vertical-align: middle;
-  font-family: "Source Code Pro", "DejaVu Sans Mono", Menlo,
-    "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
-  padding-top: 4px;
+  font-family: "Source Code Pro", monospace;
+  box-sizing: border-box;
+  margin-left:5px;
 }
 
 div.instanceTab:hover,

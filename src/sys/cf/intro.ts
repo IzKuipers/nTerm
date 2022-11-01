@@ -4,7 +4,7 @@ import { CoreFunction } from "../cf";
 import { userInterface } from "../ui";
 
 export const intro: CoreFunction = {
-  execute: () => {
+  execute() {
     const n = environment.pName;
     const b = `[█]`;
     const i = environment.currentInstance.id;

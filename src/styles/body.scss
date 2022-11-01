@@ -22,22 +22,24 @@ html {
 }
 
 div.instanceDiv {
-  width: calc(100% - calc(var(--body-padding) * 2));
-  height: calc(100% - calc(var(--body-padding) * 2));
+  width: 100%;
+  height: 100%;
   margin: 0px;
   padding: var(--body-padding);
   font-size: var(--font-size);
   font-family: var(--font-family);
   background-color: var(--bg);
   color: var(--fg);
-  height:calc(100vh - 37.5px - calc(var(--body-padding) * 2));
+  height:calc(100vh - 40px);
+  box-sizing: border-box;
+  overflow-y: scroll;
 }
 
 body {
   background-color: var(--bg);
   height:100%;
   color:white;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family:"Source Code Pro", monospace;
   padding:0;
   margin:0;
 }

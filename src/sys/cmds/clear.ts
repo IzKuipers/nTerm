@@ -3,9 +3,9 @@ import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const clear: Command = {
-  execute: () => {
+  execute() {
     environment.currentInstance.env.temp.innerHTML = "";
-    
+
     userInterface.flushTempToBuffer();
     userInterface.syncTarget();
   },

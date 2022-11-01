@@ -4,7 +4,9 @@ import { environment } from "./env";
 class VarUtils {
   replaceVariables(input: string) {
     kernel.log(`Started VarUtils.replaceVariables...`);
+
     let text = "";
+
     const list = input.split(" ");
 
     for (let i = 0; i < list.length; i++) {
@@ -13,6 +15,7 @@ class VarUtils {
 
         if (variables.has(keyName)) {
           const value = variables.get(keyName)?.value;
+
           list[i] = value ?? list[i];
         }
       }

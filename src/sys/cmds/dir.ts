@@ -2,7 +2,7 @@ import { Command } from "../cmd";
 import { userInterface } from "../ui";
 
 export const dir: Command = {
-  execute: () => {
+  execute() {
     userInterface.error("not implemented");
   },
 

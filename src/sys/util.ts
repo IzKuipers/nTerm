@@ -15,6 +15,7 @@ class Utilities {
 
   replaceAllCharsInStr(input: string, from: string, to: string) {
     kernel.log(`Started Utilities.replaceAllCharsInStr`);
+
     let output = "";
 
     for (let i = 0; i < input.length; i++) {
@@ -30,6 +31,7 @@ class Utilities {
 
   createSeparatorFor(text: string) {
     kernel.log(`Started Utilities.createSeperatorFor`);
+
     let separator = "";
 
     for (let i = 0; i < text.length; i++) {
@@ -55,7 +57,7 @@ class Utilities {
 
   unescapeSlashes(str: string) {
     kernel.log(`Started Utilities.unescapeSlashes`);
-    
+
     let parsedStr = str.replace(/(^|[^\\])(\\\\)*\\$/, "$&\\");
 
     parsedStr = parsedStr.replace(/(^|[^\\])((\\\\)*")/g, "$1\\$2");
@@ -65,7 +67,7 @@ class Utilities {
     } catch (e) {
       return str;
     }
-    
+
     return parsedStr;
   }
 
@@ -98,14 +100,16 @@ class Utilities {
       ["&gt;", ">"],
       ["&lt;", "<"],
     ];
-    
+
     let repl = str;
 
     for (const i in replacers) {
-      repl = repl.replace(i[0], i[1]);
+      const split = repl.split(i[0]);
+
+      repl = split.join(i[1]);
     }
 
-    return str.replace("\\n", "\n").replace("&lt;", "<").replace("&gt;", ">");
+    return str;
   }
 }
 

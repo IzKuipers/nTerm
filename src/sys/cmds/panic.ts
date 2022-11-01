@@ -2,7 +2,7 @@ import { kernel } from "../../kernel";
 import { Command } from "../cmd";
 
 export const panic: Command = {
-  execute: () => {
+  execute() {
     kernel.panic();
   },
 

@@ -3,7 +3,7 @@ import { userInterface } from "../ui";
 import { variables } from "../vars";
 
 export const env: Command = {
-  execute: () => {
+  execute() {
     let keys = variables.keys();
 
     for (let key of keys) {

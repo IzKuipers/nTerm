@@ -115,12 +115,12 @@ class Kernel {
 
   log(message = "") {
     const time = new Date().getTime() - environment.kStartTime;
-
     const instance = environment.currentInstance;
+    const msg = `[${time}] ${message}`;
 
-    if (instance) {
-      instance.env.kLog.push(`[${time}] ${message}`);
-    }
+    if (instance) instance.env.kLog.push(msg);
+
+    console.log(msg);
   }
 }
 

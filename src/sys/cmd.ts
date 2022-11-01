@@ -1,3 +1,4 @@
+import { themes } from "./cmds/themes";
 import { help } from "./cmds/help";
 import { clear } from "./cmds/clear";
 import { ver } from "./cmds/ver";
@@ -13,6 +14,8 @@ import { theme } from "./cmds/theme";
 import { getjson } from "./cmds/getjson";
 import { net } from "./cmds/net";
 import { rnd } from "./cmds/rnd";
+import { instance } from "./cmds/instance";
+import { colors } from "./cmds/colors";
 
 export interface Command {
   execute: (...argv: string[]) => void;
@@ -33,7 +36,10 @@ export const commands = new Map<string, Command>([
   ["repeat", repeat],
   ["env", env],
   ["theme", theme],
+  ["themes", themes],
   ["getjson", getjson],
   ["net", net],
   ["rnd", rnd],
+  ["instance", instance],
+  ["colors", colors],
 ]);

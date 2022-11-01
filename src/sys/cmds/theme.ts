@@ -1,3 +1,4 @@
+import { environment } from "./../env";
 import { Command } from "../cmd";
 import { themeHandler, Themes } from "../themes";
 import { userInterface } from "../ui";
@@ -15,7 +16,11 @@ export const theme: Command = {
       );
       return;
     }
-    userInterface.error(`Unable to apply theme: not found`);
+
+    userInterface.outputColor(
+      `Current theme: [${environment.currentInstance.env.CurrentTheme}]`,
+      `var(--blue)`
+    );
   },
 
   description: "Applies the specified theme",

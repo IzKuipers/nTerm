@@ -2,13 +2,13 @@ import { Command } from "../cmd";
 import { userInterface } from "../ui";
 
 export const net: Command = {
-  execute: () => {
+  execute() {
     if (ping()) {
       userInterface.outputColor(
         "[SUCCESS]: you are connected to the internet",
         `var(--green)`
       );
-      
+
       return;
     }
 

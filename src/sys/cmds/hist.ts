@@ -3,10 +3,10 @@ import { environment } from "../env";
 import { userInterface } from "../ui";
 
 export const hist: Command = {
-  execute: () => {
+  execute() {
     if (!environment.currentInstance.env.hist.length) {
       userInterface.output("The history list is empty!");
-      
+
       return;
     }
 
