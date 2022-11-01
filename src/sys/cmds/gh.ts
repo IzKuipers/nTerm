@@ -87,7 +87,7 @@ const subCommandMap = new Map<string, () => void>([
         userInterface.output(`Full Name       : ${name}`);
         userInterface.output(`Description     : ${desc}\n`);
         userInterface.output(`URL             : ${url}`);
-        userInterface.output(`Git URL         : ${gurl}.git\n`);
+        userInterface.output(`Git URL         : ${gurl}\n`);
         userInterface.output(`Last Updated    : ${upat}`);
       } else {
         userInterface.error(`Unable to get repo information: ${repo.message}`);
