@@ -33,6 +33,10 @@ class Kernel {
         },
       };
 
+      if (instance.id == NaN) {
+        instance.id = Math.floor(Math.random() * 1000);
+      }
+
       this.log(`Creating Instance #${instance.id}`);
 
       const temp = document.createElement("noscript");

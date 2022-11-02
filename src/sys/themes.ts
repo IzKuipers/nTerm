@@ -42,6 +42,10 @@ class ThemeHandler {
         environment.currentInstance = ins;
       }
 
+      if (instances.length == 0) {
+        document.body.classList.add(newCName);
+      }
+
       localStorage.setItem("theme", env.CurrentTheme as string);
 
       variables.set("THEME", {
