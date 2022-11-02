@@ -239,19 +239,14 @@ class UserInterface {
     this.output("", lineBreak);
     this.syncTarget();
 
-    for (
-      let i = 0;
-      i < environment.currentInstance.target.children.length;
-      i++
-    ) {
-      console.log(environment.currentInstance.target.children[i]);
-    }
-
     const target = environment.currentInstance.target;
-
     const children = target.children;
-
     const promptChild = children[children.length - 2];
+
+    console.log(
+      promptChild.textContent?.length,
+      (promptChild as HTMLSpanElement).offsetWidth
+    );
 
     return promptChild as HTMLSpanElement;
   }
