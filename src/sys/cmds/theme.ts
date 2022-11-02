@@ -34,6 +34,8 @@ export const theme: Command = {
       `\nUse [THEMES] to get a list of available themes`,
       "var(--blue)"
     );
+
+    return;
   },
 
   description: "Applies the specified theme",

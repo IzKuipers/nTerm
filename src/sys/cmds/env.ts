@@ -28,6 +28,8 @@ export const env: Command = {
         `: ${variables.get(key)?.value.replace(/\n/g, "\\n")}`
       );
     }
+
+    return;
   },
 
   description: "Display a list of all environment variables",
