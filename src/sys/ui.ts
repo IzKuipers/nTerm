@@ -116,8 +116,6 @@ class UserInterface {
 
     if (!instance.env) return;
 
-    let oldenv: string[] = [];
-
     instance.env.argv = [];
 
     if (!override) {
