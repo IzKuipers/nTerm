@@ -46,7 +46,7 @@ class Kernel {
 
       instanceHandler.loadInstance(instance);
 
-      connectionChecker.start();
+      //connectionChecker.start();
       keyboard.register();
       themeHandler.loadStoredTheme();
 
