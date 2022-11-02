@@ -33,7 +33,7 @@ class Kernel {
         },
       };
 
-      if (instance.id == NaN) {
+      if (!instance.id) {
         instance.id = Math.floor(Math.random() * 1000);
       }
 
@@ -82,6 +82,7 @@ class Kernel {
   }
 
   panic() {
+    console.warn("Kernel panic! Take a look at the traceback for more info.");
     environment.kHalt = true;
 
     connectionChecker.stop();
@@ -132,7 +133,7 @@ class Kernel {
 
     if (instance) instance.env.kLog.push(msg);
 
-    console.log(msg);
+    console.debug(msg);
   }
 }
 

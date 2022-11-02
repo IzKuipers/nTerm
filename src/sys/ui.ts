@@ -40,9 +40,6 @@ class UserInterface {
 
     let instance = environment.currentInstance;
 
-    console.warn(argv);
-    ("");
-
     if (!instance) return;
     if (iId) instance = this.unloadOldPrompt(iId, instance, argv);
 
@@ -77,7 +74,7 @@ class UserInterface {
       input.insertAdjacentElement("beforebegin", span);
       input.remove();
     } catch {
-      kernel.panic();
+      //kernel.panic();
     }
 
     instance.buffer = instance.target.innerHTML;
@@ -103,8 +100,6 @@ class UserInterface {
 
   async evaluateCommand(override?: string, noPrompt?: boolean) {
     kernel.log(`Started userInterface.evaluateCommand`);
-
-    console.warn(environment.currentInstance.env.argv);
 
     const instance = environment.currentInstance;
     const iId = instance.iId;
@@ -152,7 +147,6 @@ class UserInterface {
       );
 
       input.value = full;
-      console.log(instance.env.argv);
 
       environment.currentInstance = instance;
 
@@ -172,11 +166,11 @@ class UserInterface {
     kernel.log("inputFocusLoop: starting mouse listener");
     function event(e: MouseEvent) {
       const path = e.composedPath();
-      const instanceNode = document.getElementById(
+      let instanceNode = document.getElementById(
         `${environment.currentInstance.id}`
       );
 
-      if (!instanceNode) return;
+      if (!instanceNode) instanceNode = environment.currentInstance.target;
 
       if (path.includes(instanceNode)) {
         userInterface.focusInput();

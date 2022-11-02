@@ -1,7 +1,7 @@
 import "./styles/main.scss";
 import { kernel } from "./kernel";
-import { TabManagement } from "./sys/tabs";
 import { RightBar } from "./rightbar";
+import { TabManagement } from "./sys/tabs";
 
 try {
   RightBar.create();
@@ -11,5 +11,3 @@ try {
 
   throw e;
 }
-
-window.onerror = console.error = kernel.panic;

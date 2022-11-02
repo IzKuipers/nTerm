@@ -61,10 +61,13 @@ body.showrightbar div.rightbar {
 }
 
 body {
-  background-color: var(--bg);
+
   height:100%;
-  color:white;
-  font-family:"Source Code Pro", monospace;
+
   padding:0;
   margin:0;
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  background-color: var(--bg);
+  color: var(--fg);
 }
