@@ -21,7 +21,9 @@ class ConnectionChecker {
 
     try {
       environment.currentInstance.env.temp.innerHTML = "";
-    } catch {}
+    } catch {
+      kernel.panic();
+    }
 
     userInterface.flushTempToBuffer();
     userInterface.syncTarget();
@@ -48,6 +50,7 @@ class ConnectionChecker {
 
       return req.responseText == this.validresponse;
     } catch {
+      kernel.panic();
       return false;
     }
   }

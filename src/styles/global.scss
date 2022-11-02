@@ -10,3 +10,9 @@ span {
 ::-webkit-scrollbar {
     display:none;
 }
+
+
+::selection {
+    color: var(--bg);
+    background: var(--fg);
+}

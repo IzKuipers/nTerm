@@ -2,7 +2,7 @@ import { kernel } from "../kernel";
 
 class Utilities {
   getTime(code: Date = new Date()) {
-    kernel.log(`Started Utilities.getTime`);
+    kernel.log(`Started Utilities.getTime: ${code.getTime()}`);
     const today = code;
 
     return {
@@ -14,7 +14,9 @@ class Utilities {
   }
 
   replaceAllCharsInStr(input: string, from: string, to: string) {
-    kernel.log(`Started Utilities.replaceAllCharsInStr`);
+    kernel.log(
+      `Started Utilities.replaceAllCharsInStr: ${input.length}, ${from.length} -> ${to.length}`
+    );
 
     let output = "";
 
@@ -30,7 +32,9 @@ class Utilities {
   }
 
   createSeparatorFor(text: string) {
-    kernel.log(`Started Utilities.createSeperatorFor`);
+    kernel.log(
+      `Started Utilities.createSeperatorFor: Creating a separator of ${text.length} characters`
+    );
 
     let separator = "";
 
@@ -42,7 +46,9 @@ class Utilities {
   }
 
   removeCharsFromString(text = "", chars: string[] = []) {
-    kernel.log(`Started Utilities.removeCharsFromString`);
+    kernel.log(
+      `Started Utilities.removeCharsFromString: Removing ${chars.length} chars from str#${text.length}`
+    );
 
     const list = text.split("");
 
@@ -72,6 +78,7 @@ class Utilities {
   }
 
   async fetchJSON(url: string) {
+    kernel.log(`Started Utilities.fetchJSON: Fetching URL '${url}...'`);
     const data = await fetch(url)
       .then((response) => response.json())
       .then((json) => {
@@ -85,6 +92,7 @@ class Utilities {
   }
 
   makeHTMLTagsURLSafe(str: string) {
+    kernel.log(`Utilities.makeHTMLTagsURLSafe: Changing ${str.length} chars`);
     let list: string[] = str.split("");
 
     for (let i = 0; i < list.length; i++) {
@@ -94,7 +102,9 @@ class Utilities {
     return list.join("");
   }
 
-  reset(str: string) {
+  resetHTMLChars(str: string) {
+    kernel.log(`Utilities.resetHTMLChars: Changing ${str.length} chars`);
+
     const replacers = [
       ["\\n", "\n"],
       ["&gt;", ">"],

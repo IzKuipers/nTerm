@@ -4,7 +4,7 @@ class RB {
   create() {
     kernel.log("RightBar: creating div#app > div#rightbar");
     const bar = document.createElement("div");
-    const div = document.querySelector("div#app");
+    const div = document.body;
 
     if (!div) throw new Error("Can't create sidebar without div#app.");
 

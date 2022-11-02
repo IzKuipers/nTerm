@@ -32,10 +32,12 @@ div.instanceDiv {
   width:100%;
   box-sizing: border-box;
   overflow-y: scroll;
+  
 }
 
-div#app.showrightbar div.instanceDiv {
+body.showrightbar div.instanceDiv {
   width: calc(100% - 250px) !important;
+  transition: width 0.3s;
 }
 
 div.rightbar {
@@ -51,7 +53,7 @@ div.rightbar {
   transition: right 0.3s, visibility 0.3s, opacity 0.3s;
 }
 
-div#app.showrightbar div.rightbar {
+body.showrightbar div.rightbar {
   right:0px;
   opacity: 1;
   visibility: visible;

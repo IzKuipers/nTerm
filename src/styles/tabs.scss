@@ -1,3 +1,7 @@
+body.showrightbar div.tabHolder {
+  width:calc(100% - 250px);
+}
+
 div#tabs {
   height: 40px;
   background-color: transparent;
@@ -10,7 +14,7 @@ div#tabs div.instanceTab {
   height: 40px;
   line-height: 30px;
   max-height: 40px;
-  border-right: #0006 1px solid;
+  border-right: #fff3 1px solid;
   display: inline-block;
   min-width: 75px;
   padding: 5px 15px;
@@ -31,7 +35,7 @@ div.instanceDiv.hidden {
 }
 
 div.instanceDiv {
-  border-top: var(--gray) 2px solid;
+  border-top: #fff3 1px solid;
 }
 
 div.instanceTab span.close {
@@ -51,7 +55,7 @@ div.createButton {
   height: 30px;
   width: 30px;
   line-height: 30px;
-    background-color: #fff1;
+  background-color: #fff1;
   display: inline-block;
   border-radius: 2.5px;
   position: relative;

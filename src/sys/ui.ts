@@ -8,6 +8,8 @@ import { Instance } from "./instance";
 
 class UserInterface {
   output(str: string, lineBreak = true) {
+    kernel.log(`UserInterface: output: Outputting ${str.length} characters.`);
+
     this.flushBufferToTemp();
 
     const text = varUtils.replaceVariables(str);
@@ -28,7 +30,7 @@ class UserInterface {
     this.outputColor(`[Error]: ${str}`, `var(--red)`, lineBreak);
   }
 
-  prompt() {
+  prompt(argv?: string[]) {
     if (environment.kHalt) return;
 
     kernel.log(`Started userInterface.prompt`);
@@ -38,48 +40,59 @@ class UserInterface {
 
     let instance = environment.currentInstance;
 
-    if (!instance) return;
+    console.warn(argv);
+    ("");
 
-    if (iId) instance = this.unloadOldPrompt(iId, instance);
+    if (!instance) return;
+    if (iId) instance = this.unloadOldPrompt(iId, instance, argv);
 
     this.flushBufferToTemp();
-    this.outputColor(`\n${utilities.reset(prompt)}`, "var(--green)", false);
 
-    environment.currentInstance = this.createNewPrompt(instance, prompt);
+    const pr = this.outputColor(
+      `\n${utilities.resetHTMLChars(prompt)}`,
+      "var(--green)",
+      false
+    );
+
+    environment.currentInstance = this.createNewPrompt(instance, pr);
 
     this.flushTempToBuffer();
     this.output("");
+
+    setTimeout(() => {}, 100);
   }
 
-  unloadOldPrompt(iId: string, instance: Instance): Instance {
+  unloadOldPrompt(iId: string, instance: Instance, argv?: string[]): Instance {
     kernel.log(`Unfocused input ${iId}`);
 
     const input = document.getElementById(iId)! as HTMLInputElement;
     const span = document.createElement("span");
 
-    span.innerText = `${instance.env.cmd} ${instance.env.argv.join(" ")!}`;
+    span.innerText = `${instance.env.cmd} ${(argv || instance.env.argv).join(
+      " "
+    )!}`;
     span.id = `UNFOCUSED ${iId}`;
 
     try {
       input.insertAdjacentElement("beforebegin", span);
-
       input.remove();
-    } catch {}
+    } catch {
+      kernel.panic();
+    }
 
     instance.buffer = instance.target.innerHTML;
 
     return instance;
   }
 
-  createNewPrompt(instance: Instance, prompt: string): Instance {
+  createNewPrompt(instance: Instance, prompt: HTMLSpanElement): Instance {
     const input = document.createElement("input");
 
     instance.env.argv = [];
 
     input.className = "input";
     input.id = `${instance.id}#${Math.floor(Math.random() * 999999999)}`;
-
-    input.style.width = `calc(100% - ${prompt.length}em)`;
+    input.style.width = `calc(100% - ${prompt.offsetWidth}px)`;
     input.spellcheck = false;
 
     instance.iId = input.id;
@@ -91,15 +104,21 @@ class UserInterface {
   async evaluateCommand(override?: string, noPrompt?: boolean) {
     kernel.log(`Started userInterface.evaluateCommand`);
 
+    console.warn(environment.currentInstance.env.argv);
+
     const instance = environment.currentInstance;
     const iId = instance.iId;
     const input = document.getElementById(iId) as HTMLInputElement;
 
-    instance.env.argv = [];
-
     let value: string[];
     let command: string;
     let full: string;
+
+    if (!instance.env) return;
+
+    let oldenv: string[] = [];
+
+    instance.env.argv = [];
 
     if (!override) {
       full = input.value;
@@ -113,24 +132,21 @@ class UserInterface {
     }
 
     instance.env.cmd = command;
+    instance.env.argv = value.slice(1);
 
-    if (instance.env) instance.env.hist.push(full);
+    instance.env.hist.push(full);
 
-    if (commands.has(command) && instance.env) {
+    if (commands.has(command)) {
       const cmd = commands.get(command);
 
-      if (cmd) {
-        instance.env.argv = value.slice(1);
+      if (!cmd) return userInterface.error("Fetching function failed!");
 
-        kernel.log(`Executing command "${command}" (${cmd.description})`);
+      kernel.log(`Executing command "${command}" (${cmd.description})`);
 
-        try {
-          if (instance.env) await cmd.execute(...instance.env.argv);
-        } catch (e) {
-          kernel.panic();
-
-          throw e;
-        }
+      try {
+        await cmd.execute(...instance.env.argv);
+      } catch (e) {
+        kernel.panic();
       }
     } else {
       kernel.log(
@@ -138,20 +154,24 @@ class UserInterface {
       );
 
       input.value = full;
+      console.log(instance.env.argv);
+
+      environment.currentInstance = instance;
 
       if (command) kernelFunctions.get("default")?.execute();
     }
 
+    environment.currentInstance = instance;
+
     if (!noPrompt) {
-      this.prompt();
+      this.prompt(instance.env.argv);
 
       userInterface.focusInput();
     }
-
-    environment.currentInstance = instance;
   }
 
   inputFocusLoop() {
+    kernel.log("inputFocusLoop: starting mouse listener");
     function event(e: MouseEvent) {
       const path = e.composedPath();
       const instanceNode = document.getElementById(
@@ -177,54 +197,65 @@ class UserInterface {
     const instance = environment.currentInstance;
     const input = document.getElementById(instance.iId);
 
+    kernel.log(`Focussing to input ${instance.iId}`);
+
     if (!input || !instance) return;
 
     input.focus();
   }
 
   getPrompt() {
-    let text = "";
-    const list = (variables.get("PS")?.value || environment.prompt).split(" ");
+    kernel.log(`getPrompt: Fetching $PS variable from variables`);
 
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].startsWith("$")) {
-        const keyName = list[i].replace("$", "");
+    const prompt = variables.get("PS")?.value || environment.prompt;
 
-        if (variables.has(keyName)) {
-          const value = variables.get(keyName)?.value;
-
-          list[i] = value ?? list[i];
-        }
-      }
-
-      text += `${list[i]} `;
-    }
-
-    text.trimEnd();
-
-    return text;
+    return `${varUtils.replaceVariables(prompt).trim()} `;
   }
 
   outputColor(text: string, pri = "var(--red)", lineBreak = true, sec = "") {
+    kernel.log(`UserInterface: output: Outputting ${text.length} characters.`);
+
     const x = text.split(/(\[[^\]]*\])/);
 
+    const out = document.createElement("span");
+
     for (let i = 0; i < x.length; i++) {
-      const s: HTMLSpanElement = document.createElement("span");
-      const isPart: boolean = x[i].startsWith("[") && x[i].endsWith("]");
+      const s = document.createElement("span");
+
+      const isPart = x[i].startsWith("[") && x[i].endsWith("]");
 
       s.style.color = isPart ? pri : sec;
-      s.innerText = utilities.reset(
+      s.innerText = utilities.resetHTMLChars(
         utilities.makeHTMLTagsURLSafe(
           utilities.removeCharsFromString(x[i], ["[", "]"])
         )
       );
 
-      if (environment.currentInstance)
-        environment.currentInstance.env.temp.append(s);
+      out.append(s);
     }
+
+    if (environment.currentInstance)
+      environment.currentInstance.env.temp.append(out);
 
     this.flushTempToBuffer();
     this.output("", lineBreak);
+    this.syncTarget();
+
+    for (
+      let i = 0;
+      i < environment.currentInstance.target.children.length;
+      i++
+    ) {
+      console.log(environment.currentInstance.target.children[i]);
+    }
+
+    const target = environment.currentInstance.target;
+
+    const children = target.children;
+
+    const promptChild = children[children.length - 2];
+
+    return promptChild as HTMLSpanElement;
   }
 
   flushTempToBuffer() {

@@ -1,3 +1,4 @@
+import { kernel } from "../../kernel";
 import { Command } from "../cmd";
 import { userInterface } from "../ui";
 
@@ -30,6 +31,7 @@ function ping() {
 
     return !!req.responseText.startsWith("pong");
   } catch {
+    kernel.panic();
     return false;
   }
 }

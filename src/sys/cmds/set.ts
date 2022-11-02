@@ -8,7 +8,7 @@ export const set: Command = {
   execute: (...argv) => {
     if (argv.length > 1) {
       const name: string = argv[0];
-      const value: string | undefined = utilities.reset(
+      const value: string | undefined = utilities.resetHTMLChars(
         environment.currentInstance.env.val!.match(/"(.*?)"/)?.[1] || ""
       );
 
@@ -17,7 +17,7 @@ export const set: Command = {
         userInterface.output(`Cannot set readonly variable "${name}".`);
       } else {
         const variable: Variable = {
-          value: utilities.reset(value || ""),
+          value: utilities.resetHTMLChars(value || ""),
           readonly: false,
         };
 

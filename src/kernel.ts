@@ -7,6 +7,7 @@ import { Instance, instanceHandler } from "./sys/instance";
 import { connectionChecker } from "./sys/ping";
 class Kernel {
   init(target: HTMLElement) {
+    kernel.log(`kernel.init: Starting new kernel`);
     if (target) {
       this.setIntervals();
 
@@ -45,7 +46,7 @@ class Kernel {
 
       instanceHandler.loadInstance(instance);
 
-      //connectionChecker.start();
+      connectionChecker.start();
       keyboard.register();
       themeHandler.loadStoredTheme();
 
@@ -59,6 +60,8 @@ class Kernel {
   }
 
   setIntervals() {
+    kernel.log("kernel: Setting intervals");
+
     setInterval(() => {
       const instance = environment.currentInstance;
 
@@ -79,8 +82,6 @@ class Kernel {
 
     connectionChecker.stop();
 
-    this.log("SYSTEM PANIC! ABORTING ALL PROCESSES...");
-
     if (environment.currentInstance) {
       const instance = environment.currentInstance;
       const target = instance.target;
@@ -89,19 +90,26 @@ class Kernel {
       target.innerText = "";
     }
 
-    userInterface.output(`! KERNEL PANIC !\n\nKernel Log:`);
+    userInterface.output(`--- ! KERNEL PANIC ! ---\n\nEntire Kernel Log:\n`);
 
     let string = "";
+
+    kernel.log(
+      "\n\nPANIC! This instance has now become unusable.\nPossible reasons for this kernel panic are shown above."
+    );
 
     if (environment.currentInstance) {
       const kernelLog = environment.currentInstance.env.kLog;
 
       for (let i = 0; i < kernelLog.length; i++) {
-        string += `${kernelLog[i]}\n`;
+        const logItem = kernelLog[i];
+        const intnum = logItem.split("]")[0].replace("[", "").padStart(6, " ");
+        const str = logItem.split("]")[1];
+        string += `[${intnum}] | ${str}\n`;
       }
     }
 
-    userInterface.output(string);
+    userInterface.outputColor(string, "var(--yellow)");
     userInterface.output(`\nSystem halted. Press Ctrl+R to restart.`);
 
     setTimeout(() => {
@@ -110,7 +118,7 @@ class Kernel {
       if (!target) return;
 
       target.scrollTop = target.scrollHeight;
-    }, 1000);
+    }, 25);
   }
 
   log(message = "") {

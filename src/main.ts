@@ -11,3 +11,5 @@ try {
 
   throw e;
 }
+
+window.onerror = console.error = kernel.panic;

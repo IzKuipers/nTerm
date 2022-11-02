@@ -56,45 +56,51 @@ class TM {
   }
 
   switchTab(instanceTab: HTMLDivElement, instanceDiv: HTMLDivElement) {
-    const id = (instanceTab.children[0] as HTMLSpanElement).innerText;
     const instanceDivs = document.querySelectorAll("div.instanceDiv");
     const instanceTabs = document.querySelectorAll("div.instanceTab");
 
-    kernel.log(`TabManagement.switchTab: switching to tab #${id}...`);
+    try {
+      const id = (instanceTab.children[0] as HTMLSpanElement).innerText;
 
-    for (let i = 0; i < instanceDivs.length; i++) {
-      const instanceNode = instanceDivs[i] as HTMLDivElement;
+      kernel.log(`TabManagement.switchTab: switching to tab #${id}...`);
 
-      if (instanceNode != instanceDiv) {
-        instanceNode.classList.add("hidden");
+      for (let i = 0; i < instanceDivs.length; i++) {
+        const instanceNode = instanceDivs[i] as HTMLDivElement;
 
-        continue;
+        if (instanceNode != instanceDiv) {
+          instanceNode.classList.add("hidden");
+
+          continue;
+        }
+
+        instanceNode.classList.remove("hidden");
+
+        const instance = environment.instances.get(instanceNode.id);
+
+        if (instance) instanceHandler.switchInstance(instance);
       }
 
-      instanceNode.classList.remove("hidden");
+      for (let i = 0; i < instanceTabs.length; i++) {
+        const tab = instanceTabs[i] as HTMLDivElement;
 
-      const instance = environment.instances.get(instanceNode.id);
+        if (tab != instanceTab) {
+          tab.classList.remove("selected");
 
-      if (instance) instanceHandler.switchInstance(instance);
-    }
+          continue;
+        }
 
-    for (let i = 0; i < instanceTabs.length; i++) {
-      const tab = instanceTabs[i] as HTMLDivElement;
-
-      if (tab != instanceTab) {
-        tab.classList.remove("selected");
-
-        continue;
+        tab.classList.add("selected");
       }
 
-      tab.classList.add("selected");
+      const currentInstanceNode = document.getElementById(
+        environment.currentInstance.iId
+      );
+
+      if (currentInstanceNode) currentInstanceNode.focus();
+    } catch {
+      if (instanceTabs.length == 0) this.createNewTab();
+      kernel.panic();
     }
-
-    const currentInstanceNode = document.getElementById(
-      environment.currentInstance.iId
-    );
-
-    if (currentInstanceNode) currentInstanceNode.focus();
   }
 
   closeTab(id: number) {
@@ -103,6 +109,8 @@ class TM {
     let counter = 0;
 
     const tabs = document.querySelector("div#tabs")?.children;
+
+    if (tabs?.length == 1) return;
 
     for (let instance of environment.instances) {
       if (instance[1].id == id) {
@@ -143,7 +151,7 @@ class TM {
     tempbutton.innerText = "sb";
 
     tempbutton.addEventListener("click", () => {
-      document.querySelector("div#app")!.classList.toggle("showrightbar");
+      document.querySelector("body")!.classList.toggle("showrightbar");
     });
 
     tabSpan.id = "tabs";
