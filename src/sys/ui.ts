@@ -92,7 +92,7 @@ class UserInterface {
 
     input.className = "input";
     input.id = `${instance.id}#${Math.floor(Math.random() * 999999999)}`;
-    input.style.width = `calc(100% - ${prompt.offsetWidth}px)`;
+    input.style.width = `calc(100% - ${prompt.offsetWidth}px - 30px)`;
     input.spellcheck = false;
 
     instance.iId = input.id;
@@ -242,11 +242,6 @@ class UserInterface {
     const target = environment.currentInstance.target;
     const children = target.children;
     const promptChild = children[children.length - 2];
-
-    console.log(
-      promptChild.textContent?.length,
-      (promptChild as HTMLSpanElement).offsetWidth
-    );
 
     return promptChild as HTMLSpanElement;
   }
