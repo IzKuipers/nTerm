@@ -139,6 +139,13 @@ class TM {
     const tabSpan = document.createElement("div");
     const divHolder = document.createElement("div");
 
+    let tempbutton = document.createElement("button");
+    tempbutton.innerText = "sb";
+
+    tempbutton.addEventListener("click", () => {
+      document.querySelector("div#app")!.classList.toggle("showrightbar");
+    });
+
     tabSpan.id = "tabs";
 
     createButton.innerText = "+";
@@ -153,6 +160,8 @@ class TM {
     tabHolder.append(createButton);
 
     tabHolder.className = "tabHolder";
+
+    tabHolder.appendChild(tempbutton);
 
     document.body.append(tabHolder);
     document.body.append(divHolder);

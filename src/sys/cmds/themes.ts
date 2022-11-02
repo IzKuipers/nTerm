@@ -6,7 +6,7 @@ import { Themes } from "../themes/store";
 export const themes: Command = {
   execute() {
     for (const theme of Themes) {
-      const keyStr = theme[0].padEnd(10, " ");
+      const keyStr = theme[0].padEnd(9, " ");
       const cTheme = environment.currentInstance.env.CurrentTheme;
       const prefix = cTheme == theme[0] ? "*" : " ";
 
