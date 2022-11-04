@@ -19,7 +19,7 @@ import { colors } from "./cmds/colors";
 import { intro } from "./cmds/intro";
 
 export interface Command {
-  execute: (...argv: string[]) => void;
+  execute: (...argv: string[]) => void | number;
   description?: string;
   usage: string;
 }

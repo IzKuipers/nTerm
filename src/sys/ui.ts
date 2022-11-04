@@ -165,6 +165,9 @@ class UserInterface {
   inputFocusLoop() {
     kernel.log("inputFocusLoop: starting mouse listener");
     function event(e: MouseEvent) {
+      e.preventDefault();
+      console.log(e);
+
       const path = e.composedPath();
       let instanceNode = document.getElementById(
         `${environment.currentInstance.id}`
@@ -183,6 +186,7 @@ class UserInterface {
     }
 
     document.addEventListener("click", event);
+    document.addEventListener("contextmenu", event);
   }
 
   focusInput() {

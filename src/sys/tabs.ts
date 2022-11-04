@@ -43,6 +43,16 @@ class TM {
       e.stopImmediatePropagation();
     });
 
+    tab.addEventListener("mouseup", (e: MouseEvent) => {
+      if (e.button == 1) {
+        this.closeTab(ids);
+      }
+    });
+
+    tab.addEventListener("mousedown", (e: MouseEvent) => {
+      e.preventDefault();
+    });
+
     tab.append(txt, cbt);
 
     if (tabs.length <= 10) {
@@ -143,18 +153,36 @@ class TM {
     kernel.log(`Started TabManagement.init: initializing Tab interface...`);
 
     const tabHolder = document.createElement("div");
-    const createButton = document.createElement("div");
+    const createButton = this.createCreateButton();
     const tabSpan = document.createElement("div");
     const divHolder = document.createElement("div");
+    const rbButton = this.createRBButton();
 
-    let tempbutton = document.createElement("button");
-    tempbutton.innerText = "sb";
+    tabSpan.id = "tabs";
+    divHolder.id = "instances";
 
-    tempbutton.addEventListener("click", () => {
+    tabHolder.append(tabSpan, createButton, rbButton);
+    tabHolder.className = "tabHolder";
+
+    document.body.append(tabHolder, divHolder);
+
+    this.createNewTab();
+  }
+
+  createRBButton() {
+    const button = document.createElement("button");
+
+    button.innerText = "rb";
+
+    button.addEventListener("click", () => {
       document.querySelector("body")!.classList.toggle("showrightbar");
     });
 
-    tabSpan.id = "tabs";
+    return button;
+  }
+
+  createCreateButton() {
+    const createButton = document.createElement("button");
 
     createButton.innerText = "+";
     createButton.className = "createButton";
@@ -162,19 +190,7 @@ class TM {
       this.createNewTab();
     });
 
-    divHolder.id = "instances";
-
-    tabHolder.append(tabSpan);
-    tabHolder.append(createButton);
-
-    tabHolder.className = "tabHolder";
-
-    tabHolder.appendChild(tempbutton);
-
-    document.body.append(tabHolder);
-    document.body.append(divHolder);
-
-    this.createNewTab();
+    return createButton;
   }
 }
 
